@@ -69,7 +69,8 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      min-width: 128px;
+      width: 100%;
+      min-width: 0;
       height: 42px;
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -90,7 +91,7 @@
       margin-top: 8px;
       color: var(--muted);
       font-size: 12px;
-      text-align: right;
+      text-align: center;
     }
 
     .summary-grid {
@@ -115,7 +116,7 @@
 
     .sticky-board-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 8px;
     }
 
@@ -146,6 +147,12 @@
       color: var(--muted);
       font-size: 11px;
       line-height: 1.25;
+    }
+
+    .sticky-card.action-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .metric {
@@ -439,6 +446,10 @@
         grid-template-columns: 1fr;
       }
 
+      .sticky-board-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
       .summary-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -452,10 +463,6 @@
 
       .topbar {
         flex-direction: column;
-      }
-
-      .lock-meta {
-        text-align: left;
       }
 
       .summary-grid,
@@ -483,13 +490,6 @@
       <div>
         <h1>店铺投资回报计算器</h1>
         <p class="subtitle">先推演经营结果，再锁定方案给郝哥看。</p>
-      </div>
-      <div>
-        <button class="lock-btn" id="lockBtn" type="button" aria-pressed="false">
-          <span id="lockIcon">🔓</span>
-          <span id="lockText">可编辑</span>
-        </button>
-        <div class="lock-meta" id="lockMeta"></div>
       </div>
     </div>
 
@@ -519,6 +519,13 @@
           <div class="sticky-label">月净利润</div>
           <div class="sticky-value" id="stickyMonthlyProfit">¥0</div>
           <div class="sticky-note">扣除工资、固定成本和折旧</div>
+        </div>
+        <div class="sticky-card action-card">
+          <button class="lock-btn" id="lockBtn" type="button" aria-pressed="false">
+            <span id="lockIcon">🔓</span>
+            <span id="lockText">可编辑</span>
+          </button>
+          <div class="lock-meta" id="lockMeta"></div>
         </div>
       </div>
     </section>
@@ -552,7 +559,7 @@
       <div class="metric">
         <div class="metric-label">合伙人获利</div>
         <div class="metric-value positive" id="partnerProfit">¥0</div>
-        <div class="metric-note">工资 + 折旧后经营盈利</div>
+        <div class="metric-note">折旧 + 工资 + 经营净利</div>
       </div>
       <div class="metric">
         <div class="metric-label">安全边际</div>
@@ -775,7 +782,7 @@
           <div class="row"><span>月折旧成本</span><strong id="partnerDepreciationOut">¥0</strong></div>
           <div class="row"><span>合伙人工资</span><strong id="partnerSalaryOut">¥0</strong></div>
           <div class="row"><span>经营净利</span><strong id="partnerOperatingProfitOut">¥0</strong></div>
-          <div class="row"><span>合伙人获利合计</span><strong id="partnerProfitOut">¥0</strong></div>
+          <div class="row"><span>合伙人收入合计</span><strong id="partnerProfitOut">¥0</strong></div>
         </div>
       </div>
 
@@ -838,7 +845,7 @@
             月折旧成本 = 总投资 ÷ 折旧年限 ÷ 12个月<br>
             月净利润 = 月毛利 - 工资总成本 - 固定成本 - 月折旧成本<br>
             年化回报率 = 月净利润 × 12 ÷ 总投资<br>
-            合伙人获利 = 股东工资 + 月净利润
+            合伙人获利 = 月折旧成本 + 股东工资 + 月净利润
           </div>
           <div class="formula-block">
             <h3>单量与安全边际</h3>
@@ -1048,7 +1055,7 @@
       const monthlyOrders = Number.isFinite(monthlyBreakeven) && num("avgTicket") > 0 ? monthlyBreakeven / num("avgTicket") : Infinity;
       const dailyOrders = Number.isFinite(dailyBreakeven) && num("avgTicket") > 0 ? dailyBreakeven / num("avgTicket") : Infinity;
       const safety = Number.isFinite(monthlyBreakeven) ? sales - monthlyBreakeven : -Infinity;
-      const partnerTotalBenefit = partnerSalary + monthlyProfit;
+      const partnerTotalBenefit = depreciation + partnerSalary + monthlyProfit;
 
       out("investmentChip").textContent = money(investment);
       out("depreciationYearsChip").textContent = `${num("depreciationYears")}年`;
