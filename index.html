@@ -493,9 +493,50 @@
         min-height: 104px;
       }
     }
+
+    .floating-home {
+      position: fixed;
+      right: 18px;
+      top: 50%;
+      z-index: 20;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 54px;
+      height: 54px;
+      padding: 0 13px;
+      border: 1px solid rgba(20, 119, 104, 0.24);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--green);
+      font-size: 14px;
+      font-weight: 850;
+      text-decoration: none;
+      box-shadow: 0 14px 32px rgba(55, 43, 25, 0.14);
+      backdrop-filter: blur(10px);
+    }
+
+    .floating-home:hover {
+      background: var(--green);
+      color: #fff;
+    }
+
+    @media (max-width: 620px) {
+      .floating-home {
+        right: 12px;
+        top: auto;
+        bottom: 18px;
+        transform: none;
+        min-width: 58px;
+        height: 46px;
+        font-size: 13px;
+      }
+    }
   </style>
 </head>
 <body>
+  <a class="floating-home" href="https://312760175liusheng-ship-it.github.io/qihexiang-toolbox/" aria-label="返回七盒湘资料总台">首页</a>
   <main class="page">
     <div class="topbar">
       <div>
