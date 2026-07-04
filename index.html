@@ -403,6 +403,17 @@
       font-size: 15px;
     }
 
+    .formula-live {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(117, 109, 96, 0.24);
+      color: var(--text);
+    }
+
+    .formula-live b {
+      color: var(--brand-strong);
+    }
+
     .formula {
       padding: 14px;
       border-radius: 8px;
@@ -830,6 +841,7 @@
             基础保本营业额 = 成本合计 ÷ 毛利率<br>
             第一档店长提成 = 基础保本营业额 × 3%<br>
             月保本营业额 = (成本合计 + 第一档店长提成) ÷ 毛利率
+            <div class="formula-live" id="breakevenCalc"></div>
           </div>
           <div class="formula-block">
             <h3>店长提成</h3>
@@ -838,6 +850,7 @@
             第三档 = 超出月保本营业额 50%-100% 的部分 × 9%<br>
             超过第三档部分继续 × 9%<br>
             店长工资 = 店长底薪 + 店长提成
+            <div class="formula-live" id="managerPayCalc"></div>
           </div>
           <div class="formula-block">
             <h3>利润</h3>
@@ -846,6 +859,7 @@
             月净利润 = 月毛利 - 工资总成本 - 固定成本 - 月折旧成本<br>
             年化回报率 = 月净利润 × 12 ÷ 总投资<br>
             合伙人获利 = 月折旧成本 + 股东工资 + 月净利润
+            <div class="formula-live" id="profitCalc"></div>
           </div>
           <div class="formula-block">
             <h3>单量与安全边际</h3>
@@ -853,6 +867,7 @@
             每月保本单量 = 月保本营业额 ÷ 客单均价<br>
             每日保本单量 = 每日保本营业额 ÷ 客单均价<br>
             安全边际 = 月营业额 - 月保本营业额
+            <div class="formula-live" id="ordersCalc"></div>
           </div>
         </div>
       </details>
@@ -1126,6 +1141,34 @@
         超出保本100%部分：<b>${money(commission.thirdBase)}</b> × 9% = <b>${money(commission.thirdPay)}</b><br>
         超出第三档部分：<b>${money(commission.extraBase)}</b> × 9% = <b>${money(commission.extraPay)}</b><br>
         合计提成：<b>${money(managerCommission)}</b>
+      `;
+      out("breakevenCalc").innerHTML = `
+        当前计算：<br>
+        固定成本 <b>${money(fixedCost)}</b> = 房租 ${money(num("rentCost"))} + 水电 ${money(num("utilityCost"))} + 物业 ${money(num("propertyCost"))} + 其他 ${money(num("otherCost"))} + 低值易耗 ${money(num("consumableCost"))}<br>
+        基础成本 <b>${money(calcBaseCost())}</b> = 店长底薪 ${money(num("managerBase"))} + 员工工资 ${money(staffPay)} + 股东工资 ${money(partnerSalary)} + 固定成本 ${money(fixedCost)} + 折旧 ${money(depreciation)}<br>
+        基础保本营业额 <b>${Number.isFinite(baseTarget) ? money(baseTarget) : "无法测算"}</b> = 基础成本 ÷ ${num("grossMargin")}%<br>
+        月保本营业额 <b>${Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法测算"}</b> = (基础成本 + 第一档提成 ${Number.isFinite(baseTarget) ? money(baseTarget * 0.03) : "无法测算"}) ÷ ${num("grossMargin")}%
+      `;
+      out("managerPayCalc").innerHTML = `
+        当前计算：<br>
+        第一档 <b>${money(commission.firstPay)}</b> = ${money(commission.firstBase)} × 3%<br>
+        第二档 <b>${money(commission.secondPay)}</b> = ${money(commission.secondBase)} × 6%<br>
+        第三档 <b>${money(commission.thirdPay)}</b> = ${money(commission.thirdBase)} × 9%<br>
+        店长工资 <b>${money(managerPay)}</b> = 底薪 ${money(num("managerBase"))} + 提成 ${money(managerCommission)}
+      `;
+      out("profitCalc").innerHTML = `
+        当前计算：<br>
+        月毛利 <b>${money(grossProfit)}</b> = 月营业额 ${money(sales)} × ${num("grossMargin")}%<br>
+        月净利润 <b>${money(monthlyProfit)}</b> = 月毛利 ${money(grossProfit)} - 工资 ${money(payroll)} - 固定成本 ${money(fixedCost)} - 折旧 ${money(depreciation)}<br>
+        年化回报率 <b>${pct.format(annualRoi)}%</b> = 月净利润 ${money(monthlyProfit)} × 12 ÷ 总投资 ${money(investment)}<br>
+        合伙人获利 <b>${money(partnerTotalBenefit)}</b> = 折旧 ${money(depreciation)} + 股东工资 ${money(partnerSalary)} + 月净利润 ${money(monthlyProfit)}
+      `;
+      out("ordersCalc").innerHTML = `
+        当前计算：<br>
+        每日保本营业额 <b>${Number.isFinite(dailyBreakeven) ? money(dailyBreakeven) : "无法测算"}</b> = 月保本营业额 ${Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法测算"} ÷ 30天<br>
+        每月保本单量 <b>${Number.isFinite(monthlyOrders) ? `${Math.ceil(monthlyOrders)}单` : "无法测算"}</b> = 月保本营业额 ÷ 客单均价 ${money(num("avgTicket"))}<br>
+        每日保本单量 <b>${Number.isFinite(dailyOrders) ? `${Math.ceil(dailyOrders)}单` : "无法测算"}</b> = 每日保本营业额 ÷ 客单均价 ${money(num("avgTicket"))}<br>
+        安全边际 <b>${Number.isFinite(safety) ? money(safety) : "无法测算"}</b> = 月营业额 ${money(sales)} - 月保本营业额 ${Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法测算"}
       `;
 
       renderScenarioSlots();
