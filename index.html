@@ -1,0 +1,1175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>店铺投资回报计算器</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f1e9;
+      --panel: #ffffff;
+      --panel-soft: #faf8f3;
+      --line: #e6dfd2;
+      --text: #181715;
+      --muted: #7d7568;
+      --green: #147768;
+      --red: #b34e38;
+      --gold: #b67a14;
+      --ink: #2b2925;
+      --shadow: 0 18px 46px rgba(55, 43, 25, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 26px 0 42px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .lock-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 128px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(55, 43, 25, 0.05);
+    }
+
+    .lock-btn.is-locked {
+      border-color: rgba(179, 78, 56, 0.35);
+      background: #fff7f3;
+      color: var(--red);
+    }
+
+    .lock-meta {
+      min-height: 18px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: right;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .sticky-board {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      margin-bottom: 12px;
+      padding: 8px;
+      border: 1px solid rgba(230, 223, 210, 0.9);
+      border-radius: 8px;
+      background: rgba(245, 241, 233, 0.94);
+      box-shadow: 0 12px 28px rgba(55, 43, 25, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .sticky-board-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .sticky-card {
+      min-height: 78px;
+      padding: 12px;
+      border: 1px solid rgba(230, 223, 210, 0.9);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .sticky-label {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .sticky-value {
+      margin-top: 8px;
+      font-size: clamp(18px, 2.3vw, 26px);
+      font-weight: 750;
+      line-height: 1.05;
+      overflow-wrap: anywhere;
+    }
+
+    .sticky-note {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .metric {
+      min-height: 118px;
+      padding: 18px;
+      border: 1px solid rgba(230, 223, 210, 0.9);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .metric-value {
+      margin-top: 10px;
+      font-size: clamp(24px, 3vw, 34px);
+      font-weight: 750;
+      line-height: 1.05;
+      overflow-wrap: anywhere;
+    }
+
+    .metric-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .positive {
+      color: var(--green);
+    }
+
+    .negative {
+      color: var(--red);
+    }
+
+    .gold {
+      color: var(--gold);
+    }
+
+    .panel {
+      border: 1px solid rgba(230, 223, 210, 0.9);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-pad {
+      padding: 18px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 12px;
+      text-align: right;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    .field.wide {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .value-chip {
+      color: var(--ink);
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 12px;
+      background: var(--panel-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #8d1f25;
+    }
+
+    input:disabled {
+      opacity: 0.58;
+      cursor: not-allowed;
+    }
+
+    .breakdown {
+      display: grid;
+      gap: 8px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: minmax(100px, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .row:last-child {
+      border-bottom: 0;
+    }
+
+    .row strong {
+      color: var(--text);
+      font-weight: 750;
+      text-align: right;
+    }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .scenario-card {
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-soft);
+    }
+
+    .scenario-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-weight: 750;
+    }
+
+    .scenario-summary {
+      min-height: 88px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .scenario-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .scenario-btn {
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .scenario-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    details.formula-guide {
+      border: 1px solid rgba(230, 223, 210, 0.9);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      grid-column: 1 / -1;
+    }
+
+    details.formula-guide summary {
+      cursor: pointer;
+      padding: 18px;
+      font-size: 18px;
+      font-weight: 750;
+      list-style: none;
+    }
+
+    details.formula-guide summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .formula-guide-body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      padding: 0 18px 18px;
+    }
+
+    .formula-block {
+      padding: 14px;
+      border-radius: 8px;
+      background: var(--panel-soft);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .formula-block h3 {
+      margin: 0 0 8px;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .formula {
+      padding: 14px;
+      border-radius: 8px;
+      background: var(--panel-soft);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .formula b {
+      color: var(--text);
+    }
+
+    .locked-layer {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      z-index: 5;
+      transform: translateX(-50%);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border: 1px solid rgba(179, 78, 56, 0.24);
+      border-radius: 8px;
+      background: rgba(255, 247, 243, 0.95);
+      color: var(--red);
+      box-shadow: 0 12px 28px rgba(55, 43, 25, 0.12);
+      font-size: 13px;
+    }
+
+    body.locked .locked-layer {
+      display: inline-flex;
+    }
+
+    @media (max-width: 900px) {
+      .summary-grid,
+      .main-grid,
+      .scenario-grid,
+      .formula-guide-body {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 20px, 1120px);
+        padding-top: 18px;
+      }
+
+      .topbar {
+        flex-direction: column;
+      }
+
+      .lock-meta {
+        text-align: left;
+      }
+
+      .summary-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sticky-board {
+        top: 0;
+      }
+
+      .sticky-board-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .metric {
+        min-height: 104px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topbar">
+      <div>
+        <h1>店铺投资回报计算器</h1>
+        <p class="subtitle">先推演经营结果，再锁定方案给郝哥看。</p>
+      </div>
+      <div>
+        <button class="lock-btn" id="lockBtn" type="button" aria-pressed="false">
+          <span id="lockIcon">🔓</span>
+          <span id="lockText">可编辑</span>
+        </button>
+        <div class="lock-meta" id="lockMeta"></div>
+      </div>
+    </div>
+
+    <section class="sticky-board" aria-label="实时经营看板">
+      <div class="sticky-board-grid">
+        <div class="sticky-card">
+          <div class="sticky-label">月营业额</div>
+          <div class="sticky-value" id="stickySales">¥0</div>
+          <div class="sticky-note">当前推演</div>
+        </div>
+        <div class="sticky-card">
+          <div class="sticky-label">每月保本营业额</div>
+          <div class="sticky-value" id="stickyMonthlyBreakeven">¥0</div>
+          <div class="sticky-note">含工资、固定成本和折旧</div>
+        </div>
+        <div class="sticky-card">
+          <div class="sticky-label">每日保本营业额</div>
+          <div class="sticky-value" id="stickyDailyBreakeven">¥0</div>
+          <div class="sticky-note">按30天测算</div>
+        </div>
+        <div class="sticky-card">
+          <div class="sticky-label">保本单量</div>
+          <div class="sticky-value" id="stickyBreakevenOrders">0单</div>
+          <div class="sticky-note">按当前客单均价</div>
+        </div>
+        <div class="sticky-card">
+          <div class="sticky-label">月净利润</div>
+          <div class="sticky-value" id="stickyMonthlyProfit">¥0</div>
+          <div class="sticky-note">扣除工资、固定成本和折旧</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="summary-grid" aria-label="核心结果">
+      <div class="metric">
+        <div class="metric-label">总投资</div>
+        <div class="metric-value" id="totalInvestment">¥0</div>
+        <div class="metric-note">启动资金与预留资金合计</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">月净利润</div>
+        <div class="metric-value positive" id="monthlyProfit">¥0</div>
+        <div class="metric-note">毛利扣除工资、固定成本和折旧</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">月折旧成本</div>
+        <div class="metric-value gold" id="monthlyDepreciation">¥0</div>
+        <div class="metric-note" id="depreciationNote">按折旧年限平摊</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">年化回报率</div>
+        <div class="metric-value" id="annualRoi">0%</div>
+        <div class="metric-note">月净利润 × 12 ÷ 总投资</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">每日保本营业额</div>
+        <div class="metric-value" id="dailyBreakevenSales">¥0</div>
+        <div class="metric-note" id="dailyBreakevenNote">按30天测算</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">合伙人获利</div>
+        <div class="metric-value positive" id="partnerProfit">¥0</div>
+        <div class="metric-note">工资 + 折旧后经营盈利</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">安全边际</div>
+        <div class="metric-value" id="safetyMargin">¥0</div>
+        <div class="metric-note">月营业额 - 每月保本营业额</div>
+      </div>
+    </section>
+
+    <section class="panel panel-pad">
+      <div class="section-title">
+        <h2>经营结果</h2>
+        <span>根据当前营业额和成本实时计算</span>
+      </div>
+      <div class="breakdown">
+        <div class="row"><span>月营业额</span><strong id="salesOut">¥0</strong></div>
+        <div class="row"><span>月毛利</span><strong id="grossProfitOut">¥0</strong></div>
+        <div class="row"><span>工资总成本</span><strong id="totalPayrollOut">¥0</strong></div>
+        <div class="row"><span>固定成本</span><strong id="fixedCostOut">¥0</strong></div>
+        <div class="row"><span>月折旧成本</span><strong id="depreciationOut">¥0</strong></div>
+      </div>
+    </section>
+
+    <section class="main-grid">
+      <div class="panel panel-pad">
+        <div class="section-title">
+          <h2>投资成本</h2>
+          <span>开店前一次性投入</span>
+        </div>
+        <div class="form-grid">
+          <div class="field wide">
+            <label for="investment">
+              <span>总投资</span>
+              <span class="value-chip" id="investmentChip">¥250,000</span>
+            </label>
+            <input id="investment" type="range" min="50000" max="300000" step="5000" value="250000">
+          </div>
+          <div class="field wide">
+            <label for="depreciationYears">
+              <span>折旧年限</span>
+              <span class="value-chip" id="depreciationYearsChip">2年</span>
+            </label>
+            <input id="depreciationYears" type="range" min="1" max="5" step="0.5" value="2">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-pad">
+        <div class="section-title">
+          <h2>经营参数</h2>
+          <span>店长提成按保本指标分段</span>
+        </div>
+        <div class="form-grid">
+          <div class="field wide">
+            <label for="monthlySales">
+              <span>月营业额</span>
+              <span class="value-chip" id="monthlySalesChip">¥100,000</span>
+            </label>
+            <input id="monthlySales" type="range" min="0" max="500000" step="5000" value="120000">
+          </div>
+          <div class="field">
+            <label for="grossMargin">
+              <span>毛利率</span>
+              <span class="value-chip" id="grossMarginChip">35%</span>
+            </label>
+            <input id="grossMargin" type="range" min="10" max="70" step="1" value="35">
+          </div>
+          <div class="field">
+            <label for="avgTicket">
+              <span>客单均价</span>
+              <span class="value-chip" id="avgTicketChip">¥40</span>
+            </label>
+            <input id="avgTicket" type="range" min="10" max="200" step="1" value="40">
+          </div>
+          <div class="field">
+            <label for="managerBase">
+              <span>店长底薪</span>
+              <span class="value-chip" id="managerBaseChip">¥2,000</span>
+            </label>
+            <input id="managerBase" type="range" min="0" max="15000" step="100" value="2000">
+          </div>
+          <div class="field">
+            <label for="staffCount">
+              <span>普通员工人数</span>
+              <span class="value-chip" id="staffCountChip">2人</span>
+            </label>
+            <input id="staffCount" type="range" min="0" max="10" step="1" value="2">
+          </div>
+          <div class="field">
+            <label for="staffSalary">
+              <span>普通员工月薪</span>
+              <span class="value-chip" id="staffSalaryChip">¥4,000</span>
+            </label>
+            <input id="staffSalary" type="range" min="0" max="10000" step="100" value="4000">
+          </div>
+          <div class="field wide">
+            <div class="formula">
+              基础保本营业额：<b id="baseTargetOut">¥0</b><br>
+              含店长提成保本：<b id="autoTargetOut">¥0</b>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-pad">
+        <div class="section-title">
+          <h2>固定成本</h2>
+          <span>每月固定支出自动汇总</span>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="rentCost">
+              <span>房租</span>
+              <span class="value-chip" id="rentCostChip">¥8,000</span>
+            </label>
+            <input id="rentCost" type="range" min="0" max="30000" step="500" value="8000">
+          </div>
+          <div class="field">
+            <label for="utilityCost">
+              <span>水电</span>
+              <span class="value-chip" id="utilityCostChip">¥2,500</span>
+            </label>
+            <input id="utilityCost" type="range" min="0" max="10000" step="100" value="2500">
+          </div>
+          <div class="field">
+            <label for="propertyCost">
+              <span>物业</span>
+              <span class="value-chip" id="propertyCostChip">¥800</span>
+            </label>
+            <input id="propertyCost" type="range" min="0" max="5000" step="100" value="800">
+          </div>
+          <div class="field">
+            <label for="otherCost">
+              <span>其他</span>
+              <span class="value-chip" id="otherCostChip">¥1,000</span>
+            </label>
+            <input id="otherCost" type="range" min="0" max="10000" step="100" value="1000">
+          </div>
+          <div class="field">
+            <label for="consumableCost">
+              <span>低值易耗</span>
+              <span class="value-chip" id="consumableCostChip">¥1,000</span>
+            </label>
+            <input id="consumableCost" type="range" min="0" max="10000" step="100" value="1000">
+          </div>
+          <div class="field wide">
+            <div class="formula">
+              固定成本合计：<b id="fixedCostTotalOut">¥0</b>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-pad">
+        <div class="section-title">
+          <h2>股东工资</h2>
+          <span>参与分红前的基础工资</span>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="partnerBaseSalary">
+              <span>股东底薪</span>
+              <span class="value-chip" id="partnerBaseSalaryChip">¥2,000</span>
+            </label>
+            <input id="partnerBaseSalary" type="range" min="0" max="15000" step="100" value="2000">
+          </div>
+          <div class="field">
+            <label for="partnerCount">
+              <span>股东人数</span>
+              <span class="value-chip" id="partnerCountChip">3人</span>
+            </label>
+            <input id="partnerCount" type="range" min="0" max="10" step="1" value="3">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-pad">
+        <div class="section-title">
+          <h2>店长提成</h2>
+          <span>保本内3%，超出50%提6%，超出100%提9%</span>
+        </div>
+        <div class="formula" id="commissionFormula"></div>
+      </div>
+
+      <div class="panel panel-pad">
+        <div class="section-title">
+          <h2>每日保本</h2>
+          <span>月保本营业额 ÷ 30天</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span>基础保本营业额</span><strong id="baseBreakevenSales">¥0</strong></div>
+          <div class="row"><span>月保本营业额</span><strong id="monthlyBreakevenSales">¥0</strong></div>
+          <div class="row"><span>店长保本指标</span><strong id="managerTargetOut">¥0</strong></div>
+          <div class="row"><span>每日保本营业额</span><strong id="dailyBreakevenSales2">¥0</strong></div>
+          <div class="row"><span>每月保本单量</span><strong id="monthlyBreakevenOrders">0单</strong></div>
+          <div class="row"><span>每日保本单量</span><strong id="dailyBreakevenOrders">0单</strong></div>
+          <div class="row"><span>当前日均营业额</span><strong id="currentDailySales">¥0</strong></div>
+        </div>
+      </div>
+
+      <div class="panel panel-pad">
+        <div class="section-title">
+          <h2>工资拆解</h2>
+          <span>店长工资 + 普通员工工资 + 股东工资</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span>店长提成</span><strong id="managerCommissionOut">¥0</strong></div>
+          <div class="row"><span>店长工资</span><strong id="managerPayOut">¥0</strong></div>
+          <div class="row"><span>普通员工工资</span><strong id="staffPayOut">¥0</strong></div>
+          <div class="row"><span>股东工资</span><strong id="partnerPayrollOut">¥0</strong></div>
+          <div class="row"><span>工资总成本</span><strong id="totalPayrollOut2">¥0</strong></div>
+        </div>
+      </div>
+
+      <div class="panel panel-pad">
+        <div class="section-title">
+          <h2>合伙人获利</h2>
+          <span>自动按当前经营结果拆解</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span>月折旧成本</span><strong id="partnerDepreciationOut">¥0</strong></div>
+          <div class="row"><span>合伙人工资</span><strong id="partnerSalaryOut">¥0</strong></div>
+          <div class="row"><span>经营净利</span><strong id="partnerOperatingProfitOut">¥0</strong></div>
+          <div class="row"><span>合伙人获利合计</span><strong id="partnerProfitOut">¥0</strong></div>
+        </div>
+      </div>
+
+      <div class="panel panel-pad">
+        <div class="section-title">
+          <h2>方案对比</h2>
+          <span>保存当前推演，随时载入对比</span>
+        </div>
+        <div class="scenario-grid">
+          <div class="scenario-card" data-scenario-card="1">
+            <div class="scenario-head"><span>方案A</span><span id="scenarioTime1">未保存</span></div>
+            <div class="scenario-summary" id="scenarioSummary1">保存当前参数后显示结果。</div>
+            <div class="scenario-actions">
+              <button class="scenario-btn" type="button" data-save-slot="1">保存</button>
+              <button class="scenario-btn" type="button" data-load-slot="1">载入</button>
+            </div>
+          </div>
+          <div class="scenario-card" data-scenario-card="2">
+            <div class="scenario-head"><span>方案B</span><span id="scenarioTime2">未保存</span></div>
+            <div class="scenario-summary" id="scenarioSummary2">保存当前参数后显示结果。</div>
+            <div class="scenario-actions">
+              <button class="scenario-btn" type="button" data-save-slot="2">保存</button>
+              <button class="scenario-btn" type="button" data-load-slot="2">载入</button>
+            </div>
+          </div>
+          <div class="scenario-card" data-scenario-card="3">
+            <div class="scenario-head"><span>方案C</span><span id="scenarioTime3">未保存</span></div>
+            <div class="scenario-summary" id="scenarioSummary3">保存当前参数后显示结果。</div>
+            <div class="scenario-actions">
+              <button class="scenario-btn" type="button" data-save-slot="3">保存</button>
+              <button class="scenario-btn" type="button" data-load-slot="3">载入</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <details class="formula-guide">
+        <summary>计算公式说明</summary>
+        <div class="formula-guide-body">
+          <div class="formula-block">
+            <h3>保本营业额</h3>
+            固定成本合计 = 房租 + 水电 + 物业 + 其他 + 低值易耗<br>
+            工资总成本 = 店长工资 + 普通员工工资 + 股东工资<br>
+            成本合计 = 店长底薪 + 普通员工工资 + 股东工资 + 固定成本 + 月折旧成本<br>
+            基础保本营业额 = 成本合计 ÷ 毛利率<br>
+            第一档店长提成 = 基础保本营业额 × 3%<br>
+            月保本营业额 = (成本合计 + 第一档店长提成) ÷ 毛利率
+          </div>
+          <div class="formula-block">
+            <h3>店长提成</h3>
+            第一档 = 基础保本营业额内 × 3%<br>
+            第二档 = 超出月保本营业额 50% 内的部分 × 6%<br>
+            第三档 = 超出月保本营业额 50%-100% 的部分 × 9%<br>
+            超过第三档部分继续 × 9%<br>
+            店长工资 = 店长底薪 + 店长提成
+          </div>
+          <div class="formula-block">
+            <h3>利润</h3>
+            月毛利 = 月营业额 × 毛利率<br>
+            月折旧成本 = 总投资 ÷ 折旧年限 ÷ 12个月<br>
+            月净利润 = 月毛利 - 工资总成本 - 固定成本 - 月折旧成本<br>
+            年化回报率 = 月净利润 × 12 ÷ 总投资<br>
+            合伙人获利 = 股东工资 + 月净利润
+          </div>
+          <div class="formula-block">
+            <h3>单量与安全边际</h3>
+            每日保本营业额 = 月保本营业额 ÷ 30天<br>
+            每月保本单量 = 月保本营业额 ÷ 客单均价<br>
+            每日保本单量 = 每日保本营业额 ÷ 客单均价<br>
+            安全边际 = 月营业额 - 月保本营业额
+          </div>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <div class="locked-layer" role="status">🔒 当前方案已锁定</div>
+
+  <script>
+    const yuan = new Intl.NumberFormat("zh-CN", {
+      style: "currency",
+      currency: "CNY",
+      maximumFractionDigits: 0
+    });
+
+    const pct = new Intl.NumberFormat("zh-CN", {
+      maximumFractionDigits: 1
+    });
+
+    const ids = [
+      "investment", "depreciationYears", "monthlySales", "grossMargin", "avgTicket",
+      "managerBase", "staffCount", "staffSalary", "rentCost", "utilityCost",
+      "propertyCost", "otherCost", "consumableCost", "partnerBaseSalary", "partnerCount"
+    ];
+    const storageKey = "storeRoiCalculatorValues";
+    const scenariosKey = "storeRoiCalculatorScenarios";
+
+    const inputs = Object.fromEntries(ids.map((id) => [id, document.getElementById(id)]));
+    const out = (id) => document.getElementById(id);
+    let locked = false;
+    let lockedAt = "";
+
+    function loadSavedValues() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+        ids.forEach((id) => {
+          if (saved[id] != null && inputs[id]) {
+            inputs[id].value = saved[id];
+          }
+        });
+      } catch {
+        localStorage.removeItem(storageKey);
+      }
+    }
+
+    function saveValues() {
+      const values = Object.fromEntries(ids.map((id) => [id, inputs[id].value]));
+      localStorage.setItem(storageKey, JSON.stringify(values));
+    }
+
+    function currentValues() {
+      return Object.fromEntries(ids.map((id) => [id, inputs[id].value]));
+    }
+
+    function readScenarios() {
+      try {
+        return JSON.parse(localStorage.getItem(scenariosKey) || "{}");
+      } catch {
+        localStorage.removeItem(scenariosKey);
+        return {};
+      }
+    }
+
+    function writeScenarios(scenarios) {
+      localStorage.setItem(scenariosKey, JSON.stringify(scenarios));
+    }
+
+    function renderScenarioSlots() {
+      const scenarios = readScenarios();
+      [1, 2, 3].forEach((slot) => {
+        const scenario = scenarios[slot];
+        const timeEl = out(`scenarioTime${slot}`);
+        const summaryEl = out(`scenarioSummary${slot}`);
+        const loadBtn = document.querySelector(`[data-load-slot="${slot}"]`);
+        if (!scenario) {
+          timeEl.textContent = "未保存";
+          summaryEl.textContent = "保存当前参数后显示结果。";
+          loadBtn.disabled = true;
+          return;
+        }
+        timeEl.textContent = scenario.savedAt;
+        summaryEl.innerHTML = `
+          月营业额：<b>${scenario.summary.sales}</b><br>
+          月净利润：<b>${scenario.summary.monthlyProfit}</b><br>
+          安全边际：<b>${scenario.summary.safetyMargin}</b>
+        `;
+        loadBtn.disabled = locked;
+      });
+    }
+
+    function saveScenario(slot) {
+      const scenarios = readScenarios();
+      scenarios[slot] = {
+        savedAt: new Date().toLocaleString("zh-CN", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }),
+        values: currentValues(),
+        summary: {
+          sales: out("stickySales").textContent,
+          monthlyProfit: out("stickyMonthlyProfit").textContent,
+          safetyMargin: out("safetyMargin").textContent
+        }
+      };
+      writeScenarios(scenarios);
+      renderScenarioSlots();
+    }
+
+    function loadScenario(slot) {
+      if (locked) return;
+      const scenario = readScenarios()[slot];
+      if (!scenario) return;
+      ids.forEach((id) => {
+        if (scenario.values[id] != null) {
+          inputs[id].value = scenario.values[id];
+        }
+      });
+      saveValues();
+      render();
+    }
+
+    function num(id) {
+      return Number(inputs[id].value || 0);
+    }
+
+    function money(value) {
+      return yuan.format(Math.round(value || 0));
+    }
+
+    function calcDepreciation() {
+      const years = Math.max(num("depreciationYears"), 0.5);
+      return num("investment") / years / 12;
+    }
+
+    function calcFixedCost() {
+      return num("rentCost") + num("utilityCost") + num("propertyCost") + num("otherCost") + num("consumableCost");
+    }
+
+    function calcPartnerSalary() {
+      return num("partnerBaseSalary") * num("partnerCount");
+    }
+
+    function calcCommission(sales, baseTarget, finalTarget) {
+      const firstBase = Math.min(sales, baseTarget);
+      const secondBase = Math.min(Math.max(sales - finalTarget, 0), finalTarget * 0.5);
+      const thirdBase = Math.min(Math.max(sales - finalTarget * 1.5, 0), finalTarget * 0.5);
+      const extraBase = Math.max(sales - finalTarget * 2, 0);
+      return {
+        firstBase,
+        secondBase,
+        thirdBase,
+        extraBase,
+        firstPay: firstBase * 0.03,
+        secondPay: secondBase * 0.06,
+        thirdPay: thirdBase * 0.09,
+        extraPay: extraBase * 0.09
+      };
+    }
+
+    function calcBaseCost() {
+      return num("managerBase") + num("staffCount") * num("staffSalary") + calcPartnerSalary() + calcFixedCost() + calcDepreciation();
+    }
+
+    function calcBaseTarget() {
+      const margin = num("grossMargin") / 100;
+      if (margin <= 0) {
+        return Infinity;
+      }
+      return calcBaseCost() / margin;
+    }
+
+    function calcFinalBreakeven(baseTarget) {
+      const margin = num("grossMargin") / 100;
+      if (margin <= 0 || !Number.isFinite(baseTarget)) {
+        return Infinity;
+      }
+      const firstCommission = baseTarget * 0.03;
+      return (calcBaseCost() + firstCommission) / margin;
+    }
+
+    function setTone(el, value) {
+      el.classList.toggle("positive", value >= 0);
+      el.classList.toggle("negative", value < 0);
+    }
+
+    function render() {
+      const investment = num("investment");
+      const sales = num("monthlySales");
+      const baseTarget = calcBaseTarget();
+      const grossProfit = sales * (num("grossMargin") / 100);
+      const fixedCost = calcFixedCost();
+      const depreciation = calcDepreciation();
+      const monthlyBreakeven = calcFinalBreakeven(baseTarget);
+      const commission = calcCommission(sales, baseTarget, monthlyBreakeven);
+      const managerCommission = commission.firstPay + commission.secondPay + commission.thirdPay + commission.extraPay;
+      const managerPay = num("managerBase") + managerCommission;
+      const staffPay = num("staffCount") * num("staffSalary");
+      const partnerSalary = calcPartnerSalary();
+      const payroll = managerPay + staffPay + partnerSalary;
+      const monthlyProfit = grossProfit - payroll - fixedCost - depreciation;
+      const annualRoi = investment > 0 ? monthlyProfit * 12 / investment * 100 : 0;
+      const dailyBreakeven = Number.isFinite(monthlyBreakeven) ? monthlyBreakeven / 30 : Infinity;
+      const monthlyOrders = Number.isFinite(monthlyBreakeven) && num("avgTicket") > 0 ? monthlyBreakeven / num("avgTicket") : Infinity;
+      const dailyOrders = Number.isFinite(dailyBreakeven) && num("avgTicket") > 0 ? dailyBreakeven / num("avgTicket") : Infinity;
+      const safety = Number.isFinite(monthlyBreakeven) ? sales - monthlyBreakeven : -Infinity;
+      const partnerTotalBenefit = partnerSalary + monthlyProfit;
+
+      out("investmentChip").textContent = money(investment);
+      out("depreciationYearsChip").textContent = `${num("depreciationYears")}年`;
+      out("monthlySalesChip").textContent = money(sales);
+      out("grossMarginChip").textContent = `${num("grossMargin")}%`;
+      out("avgTicketChip").textContent = money(num("avgTicket"));
+      out("managerBaseChip").textContent = money(num("managerBase"));
+      out("staffCountChip").textContent = `${num("staffCount")}人`;
+      out("staffSalaryChip").textContent = money(num("staffSalary"));
+      out("rentCostChip").textContent = money(num("rentCost"));
+      out("utilityCostChip").textContent = money(num("utilityCost"));
+      out("propertyCostChip").textContent = money(num("propertyCost"));
+      out("otherCostChip").textContent = money(num("otherCost"));
+      out("consumableCostChip").textContent = money(num("consumableCost"));
+      out("partnerBaseSalaryChip").textContent = money(num("partnerBaseSalary"));
+      out("partnerCountChip").textContent = `${num("partnerCount")}人`;
+      out("fixedCostTotalOut").textContent = money(fixedCost);
+      out("totalInvestment").textContent = money(investment);
+      out("monthlyProfit").textContent = money(monthlyProfit);
+      setTone(out("monthlyProfit"), monthlyProfit);
+      out("partnerProfit").textContent = money(partnerTotalBenefit);
+      setTone(out("partnerProfit"), partnerTotalBenefit);
+      out("monthlyDepreciation").textContent = money(depreciation);
+      out("depreciationNote").textContent = `${money(investment)} ÷ ${num("depreciationYears")}年 ÷ 12个月`;
+      out("annualRoi").textContent = `${pct.format(annualRoi)}%`;
+      setTone(out("annualRoi"), annualRoi);
+      out("dailyBreakevenSales").textContent = Number.isFinite(dailyBreakeven) ? money(dailyBreakeven) : "无法保本";
+      out("dailyBreakevenNote").textContent = Number.isFinite(dailyOrders) ? `约 ${Math.ceil(dailyOrders)} 单/天` : "当前参数下无法测算";
+      out("safetyMargin").textContent = Number.isFinite(safety) ? money(safety) : "无法测算";
+      setTone(out("safetyMargin"), safety);
+      out("stickySales").textContent = money(sales);
+      out("stickyMonthlyBreakeven").textContent = Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法保本";
+      out("stickyDailyBreakeven").textContent = Number.isFinite(dailyBreakeven) ? money(dailyBreakeven) : "无法保本";
+      out("stickyBreakevenOrders").textContent = Number.isFinite(dailyOrders) ? `${Math.ceil(dailyOrders)}单` : "无法测算";
+      out("stickyMonthlyProfit").textContent = money(monthlyProfit);
+      setTone(out("stickyMonthlyProfit"), monthlyProfit);
+
+      out("salesOut").textContent = money(sales);
+      out("grossProfitOut").textContent = money(grossProfit);
+      out("totalPayrollOut").textContent = money(payroll);
+      out("fixedCostOut").textContent = money(fixedCost);
+      out("depreciationOut").textContent = money(depreciation);
+
+      out("managerCommissionOut").textContent = money(managerCommission);
+      out("managerPayOut").textContent = money(managerPay);
+      out("staffPayOut").textContent = money(staffPay);
+      out("partnerPayrollOut").textContent = money(partnerSalary);
+      out("totalPayrollOut2").textContent = money(payroll);
+      out("baseTargetOut").textContent = Number.isFinite(baseTarget) ? money(baseTarget) : "无法测算";
+      out("autoTargetOut").textContent = Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法测算";
+      out("monthlyBreakevenSales").textContent = Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法保本";
+      out("baseBreakevenSales").textContent = Number.isFinite(baseTarget) ? money(baseTarget) : "无法测算";
+      out("managerTargetOut").textContent = Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法测算";
+      out("dailyBreakevenSales2").textContent = Number.isFinite(dailyBreakeven) ? money(dailyBreakeven) : "无法保本";
+      out("monthlyBreakevenOrders").textContent = Number.isFinite(monthlyOrders) ? `${Math.ceil(monthlyOrders)}单` : "无法测算";
+      out("dailyBreakevenOrders").textContent = Number.isFinite(dailyOrders) ? `${Math.ceil(dailyOrders)}单` : "无法测算";
+      out("currentDailySales").textContent = money(sales / 30);
+      out("partnerDepreciationOut").textContent = money(depreciation);
+      out("partnerSalaryOut").textContent = money(partnerSalary);
+      out("partnerOperatingProfitOut").textContent = money(monthlyProfit);
+      setTone(out("partnerOperatingProfitOut"), monthlyProfit);
+      out("partnerProfitOut").textContent = money(partnerTotalBenefit);
+      setTone(out("partnerProfitOut"), partnerTotalBenefit);
+
+      out("commissionFormula").innerHTML = `
+        保本内：<b>${money(commission.firstBase)}</b> × 3% = <b>${money(commission.firstPay)}</b><br>
+        超出保本50%部分：<b>${money(commission.secondBase)}</b> × 6% = <b>${money(commission.secondPay)}</b><br>
+        超出保本100%部分：<b>${money(commission.thirdBase)}</b> × 9% = <b>${money(commission.thirdPay)}</b><br>
+        超出第三档部分：<b>${money(commission.extraBase)}</b> × 9% = <b>${money(commission.extraPay)}</b><br>
+        合计提成：<b>${money(managerCommission)}</b>
+      `;
+
+      renderScenarioSlots();
+    }
+
+    function setLocked(nextLocked) {
+      locked = nextLocked;
+      document.body.classList.toggle("locked", locked);
+      document.querySelectorAll("input").forEach((input) => {
+        input.disabled = locked;
+      });
+      document.querySelectorAll("[data-load-slot]").forEach((button) => {
+        button.disabled = locked || !readScenarios()[button.dataset.loadSlot];
+      });
+      out("lockBtn").classList.toggle("is-locked", locked);
+      out("lockBtn").setAttribute("aria-pressed", String(locked));
+      out("lockIcon").textContent = locked ? "🔒" : "🔓";
+      out("lockText").textContent = locked ? "已锁定" : "可编辑";
+      if (locked) {
+        lockedAt = new Date().toLocaleString("zh-CN", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      }
+      out("lockMeta").textContent = locked ? `锁定时间：${lockedAt}` : "";
+    }
+
+    ids.forEach((id) => {
+      inputs[id].addEventListener("input", () => {
+        saveValues();
+        render();
+      });
+    });
+
+    out("lockBtn").addEventListener("click", () => {
+      setLocked(!locked);
+    });
+
+    document.querySelectorAll("[data-save-slot]").forEach((button) => {
+      button.addEventListener("click", () => saveScenario(button.dataset.saveSlot));
+    });
+
+    document.querySelectorAll("[data-load-slot]").forEach((button) => {
+      button.addEventListener("click", () => loadScenario(button.dataset.loadSlot));
+    });
+
+    loadSavedValues();
+    render();
+  </script>
+</body>
+</html>
