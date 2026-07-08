@@ -141,7 +141,7 @@
 
     .sticky-board-grid {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 8px;
     }
 
@@ -180,6 +180,14 @@
       line-height: 1.25;
     }
 
+    .sticky-note b {
+      display: block;
+      margin-top: 4px;
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
     .sticky-card.is-wide .sticky-value {
       margin-top: 10px;
       font-size: clamp(32px, 4vw, 44px);
@@ -187,7 +195,7 @@
 
     .sticky-card.is-wide .sticky-note {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
       margin-top: 12px;
       font-size: 13px;
@@ -214,6 +222,29 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+    }
+
+    .quick-scenarios {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .scenario-pill {
+      height: 30px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(245, 241, 233, 0.9);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .scenario-pill:disabled {
+      opacity: 0.36;
+      cursor: not-allowed;
     }
 
     .metric {
@@ -510,6 +541,39 @@
       display: inline-flex;
     }
 
+    .float-tools {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 5;
+      padding: 8px;
+      border: 1px solid rgba(20, 119, 104, 0.22);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 14px 30px rgba(55, 43, 25, 0.14);
+      backdrop-filter: blur(10px);
+    }
+
+    .back-top {
+      border: 0;
+      border-radius: 999px;
+      background: rgba(245, 241, 233, 0.9);
+      color: var(--green);
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .back-top {
+      width: 64px;
+      height: 44px;
+      font-size: 15px;
+    }
+
+    .scenario-pill:active,
+    .back-top:active {
+      transform: translateY(1px);
+    }
+
     @media (max-width: 900px) {
       .summary-grid,
       .main-grid,
@@ -560,7 +624,7 @@
       }
 
       .sticky-card.is-wide .sticky-note {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .sticky-chip {
@@ -576,58 +640,16 @@
         min-height: 104px;
       }
     }
-
-    .floating-home {
-      position: fixed;
-      right: 18px;
-      top: 50%;
-      z-index: 20;
-      transform: translateY(-50%);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 54px;
-      height: 54px;
-      padding: 0 13px;
-      border: 1px solid rgba(20, 119, 104, 0.24);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.92);
-      color: var(--green);
-      font-size: 14px;
-      font-weight: 850;
-      text-decoration: none;
-      box-shadow: 0 14px 32px rgba(55, 43, 25, 0.14);
-      backdrop-filter: blur(10px);
-    }
-
-    .floating-home:hover {
-      background: var(--green);
-      color: #fff;
-    }
-
-    @media (max-width: 620px) {
-      .floating-home {
-        right: 12px;
-        top: auto;
-        bottom: 18px;
-        transform: none;
-        min-width: 58px;
-        height: 46px;
-        font-size: 13px;
-      }
-    }
   </style>
 </head>
 <body>
-  <a class="floating-home" href="https://312760175liusheng-ship-it.github.io/qihexiang-toolbox/" aria-label="返回七盒湘资料总台">首页</a>
   <main class="page">
     <div class="topbar">
       <div class="brand-title">
-        <img class="brand-logo" src="assets/longchengxiang-logo.png" alt="龙城香">
+        <img class="brand-logo" src="assets/longchengxiang-logo.jpg" alt="龙城香">
         <div>
           <p class="brand-kicker">龙城香专用测算</p>
           <h1>店铺投资回报计算器</h1>
-          <p class="subtitle">先推演经营结果，再锁定方案给郝哥看。</p>
         </div>
       </div>
     </div>
@@ -642,12 +664,7 @@
         <div class="sticky-card">
           <div class="sticky-label">每月保本营业额</div>
           <div class="sticky-value" id="stickyMonthlyBreakeven">¥0</div>
-          <div class="sticky-note">含工资、固定成本和折旧</div>
-        </div>
-        <div class="sticky-card">
-          <div class="sticky-label">保本单量</div>
-          <div class="sticky-value" id="stickyBreakevenOrders">0单</div>
-          <div class="sticky-note">按当前客单均价</div>
+          <div class="sticky-note" id="stickyBreakevenNote">含工资、固定成本和折旧</div>
         </div>
         <div class="sticky-card">
           <div class="sticky-label">月净利润</div>
@@ -659,6 +676,11 @@
             <span id="lockIcon">🔓</span>
             <span id="lockText">可编辑</span>
           </button>
+          <div class="quick-scenarios" aria-label="方案快速切换">
+            <button class="scenario-pill" type="button" data-quick-load-slot="1" aria-label="载入方案A">A</button>
+            <button class="scenario-pill" type="button" data-quick-load-slot="2" aria-label="载入方案B">B</button>
+            <button class="scenario-pill" type="button" data-quick-load-slot="3" aria-label="载入方案C">C</button>
+          </div>
           <div class="lock-meta" id="lockMeta"></div>
         </div>
       </div>
@@ -998,6 +1020,9 @@
   </main>
 
   <div class="locked-layer" role="status">🔒 当前方案已锁定</div>
+  <div class="float-tools" aria-label="快速操作">
+    <button class="back-top" id="backTopBtn" type="button" aria-label="回到顶部">置顶</button>
+  </div>
 
   <script>
     const yuan = new Intl.NumberFormat("zh-CN", {
@@ -1069,6 +1094,7 @@
           timeEl.textContent = "未保存";
           summaryEl.textContent = "保存当前参数后显示结果。";
           loadBtn.disabled = true;
+          out(`quickLoad${slot}`)?.setAttribute("disabled", "");
           return;
         }
         timeEl.textContent = scenario.savedAt;
@@ -1078,6 +1104,11 @@
           安全边际：<b>${scenario.summary.safetyMargin}</b>
         `;
         loadBtn.disabled = locked;
+        if (locked) {
+          out(`quickLoad${slot}`)?.setAttribute("disabled", "");
+        } else {
+          out(`quickLoad${slot}`)?.removeAttribute("disabled");
+        }
       });
     }
 
@@ -1192,6 +1223,7 @@
       const dailyBreakeven = Number.isFinite(monthlyBreakeven) ? monthlyBreakeven / 30 : Infinity;
       const monthlyOrders = Number.isFinite(monthlyBreakeven) && num("avgTicket") > 0 ? monthlyBreakeven / num("avgTicket") : Infinity;
       const dailyOrders = Number.isFinite(dailyBreakeven) && num("avgTicket") > 0 ? dailyBreakeven / num("avgTicket") : Infinity;
+      const currentDailyOrders = num("avgTicket") > 0 ? sales / 30 / num("avgTicket") : Infinity;
       const safety = Number.isFinite(monthlyBreakeven) ? sales - monthlyBreakeven : -Infinity;
       const partnerTotalBenefit = depreciation + partnerSalary + monthlyProfit;
 
@@ -1228,16 +1260,20 @@
       out("stickySalesNote").innerHTML = num("avgTicket") > 0
         ? `
           <span class="sticky-chip">月单量<b>约${Math.ceil(sales / num("avgTicket"))}单</b></span>
+          <span class="sticky-chip">日单量<b>约${Math.ceil(currentDailyOrders)}单</b></span>
           <span class="sticky-chip">日均营业额<b>${money(sales / 30)}</b></span>
           <span class="sticky-chip">客单价<b>${money(num("avgTicket"))}</b></span>
         `
         : `
           <span class="sticky-chip">月单量<b>无法测算</b></span>
+          <span class="sticky-chip">日单量<b>无法测算</b></span>
           <span class="sticky-chip">日均营业额<b>${money(sales / 30)}</b></span>
           <span class="sticky-chip">客单价<b>${money(num("avgTicket"))}</b></span>
         `;
       out("stickyMonthlyBreakeven").textContent = Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法保本";
-      out("stickyBreakevenOrders").textContent = Number.isFinite(dailyOrders) ? `${Math.ceil(dailyOrders)}单` : "无法测算";
+      out("stickyBreakevenNote").innerHTML = Number.isFinite(dailyOrders)
+        ? `含工资、固定成本和折旧<b>保本单量：${Math.ceil(dailyOrders)}单/天</b>`
+        : `含工资、固定成本和折旧<b>保本单量：无法测算</b>`;
       out("stickyMonthlyProfit").textContent = money(monthlyProfit);
       setTone(out("stickyMonthlyProfit"), monthlyProfit);
 
@@ -1316,6 +1352,9 @@
       document.querySelectorAll("[data-load-slot]").forEach((button) => {
         button.disabled = locked || !readScenarios()[button.dataset.loadSlot];
       });
+      document.querySelectorAll("[data-quick-load-slot]").forEach((button) => {
+        button.disabled = locked || !readScenarios()[button.dataset.quickLoadSlot];
+      });
       out("lockBtn").classList.toggle("is-locked", locked);
       out("lockBtn").setAttribute("aria-pressed", String(locked));
       out("lockIcon").textContent = locked ? "🔒" : "🔓";
@@ -1343,12 +1382,21 @@
       setLocked(!locked);
     });
 
+    out("backTopBtn").addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
     document.querySelectorAll("[data-save-slot]").forEach((button) => {
       button.addEventListener("click", () => saveScenario(button.dataset.saveSlot));
     });
 
     document.querySelectorAll("[data-load-slot]").forEach((button) => {
       button.addEventListener("click", () => loadScenario(button.dataset.loadSlot));
+    });
+
+    document.querySelectorAll("[data-quick-load-slot]").forEach((button) => {
+      button.id = `quickLoad${button.dataset.quickLoadSlot}`;
+      button.addEventListener("click", () => loadScenario(button.dataset.quickLoadSlot));
     });
 
     loadSavedValues();
