@@ -52,6 +52,31 @@
       margin-bottom: 18px;
     }
 
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 92px;
+      height: 92px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(230, 223, 210, 0.9);
+      border-radius: 8px;
+      background: #fff;
+      object-fit: contain;
+      box-shadow: 0 12px 26px rgba(55, 43, 25, 0.08);
+    }
+
+    .brand-kicker {
+      margin: 0 0 6px;
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
     h1 {
       margin: 0;
       font-size: 28px;
@@ -128,6 +153,12 @@
       background: var(--panel);
     }
 
+    .sticky-card.is-wide {
+      grid-column: span 2;
+      min-height: 108px;
+      padding: 14px 16px;
+    }
+
     .sticky-label {
       color: var(--muted);
       font-size: 12px;
@@ -147,6 +178,36 @@
       color: var(--muted);
       font-size: 11px;
       line-height: 1.25;
+    }
+
+    .sticky-card.is-wide .sticky-value {
+      margin-top: 10px;
+      font-size: clamp(32px, 4vw, 44px);
+    }
+
+    .sticky-card.is-wide .sticky-note {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.25;
+    }
+
+    .sticky-chip {
+      padding: 7px 8px;
+      border-radius: 8px;
+      background: rgba(245, 241, 233, 0.72);
+      color: var(--text);
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .sticky-chip b {
+      display: block;
+      margin-top: 2px;
+      font-size: 16px;
+      line-height: 1.15;
     }
 
     .sticky-card.action-card {
@@ -476,6 +537,15 @@
         flex-direction: column;
       }
 
+      .brand-title {
+        align-items: center;
+      }
+
+      .brand-logo {
+        width: 78px;
+        height: 78px;
+      }
+
       .summary-grid,
       .form-grid {
         grid-template-columns: 1fr;
@@ -487,6 +557,19 @@
 
       .sticky-board-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .sticky-card.is-wide .sticky-note {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .sticky-chip {
+        padding: 6px 4px;
+        font-size: 12px;
+      }
+
+      .sticky-chip b {
+        font-size: 15px;
       }
 
       .metric {
@@ -539,28 +622,27 @@
   <a class="floating-home" href="https://312760175liusheng-ship-it.github.io/qihexiang-toolbox/" aria-label="返回七盒湘资料总台">首页</a>
   <main class="page">
     <div class="topbar">
-      <div>
-        <h1>店铺投资回报计算器</h1>
-        <p class="subtitle">先推演经营结果，再锁定方案给郝哥看。</p>
+      <div class="brand-title">
+        <img class="brand-logo" src="assets/longchengxiang-logo.png" alt="龙城香">
+        <div>
+          <p class="brand-kicker">龙城香专用测算</p>
+          <h1>店铺投资回报计算器</h1>
+          <p class="subtitle">先推演经营结果，再锁定方案给郝哥看。</p>
+        </div>
       </div>
     </div>
 
     <section class="sticky-board" aria-label="实时经营看板">
       <div class="sticky-board-grid">
-        <div class="sticky-card">
+        <div class="sticky-card is-wide">
           <div class="sticky-label">月营业额</div>
           <div class="sticky-value" id="stickySales">¥0</div>
-          <div class="sticky-note">当前推演</div>
+          <div class="sticky-note" id="stickySalesNote">当前推演</div>
         </div>
         <div class="sticky-card">
           <div class="sticky-label">每月保本营业额</div>
           <div class="sticky-value" id="stickyMonthlyBreakeven">¥0</div>
           <div class="sticky-note">含工资、固定成本和折旧</div>
-        </div>
-        <div class="sticky-card">
-          <div class="sticky-label">每日保本营业额</div>
-          <div class="sticky-value" id="stickyDailyBreakeven">¥0</div>
-          <div class="sticky-note">按30天测算</div>
         </div>
         <div class="sticky-card">
           <div class="sticky-label">保本单量</div>
@@ -1143,8 +1225,18 @@
       out("safetyMargin").textContent = Number.isFinite(safety) ? money(safety) : "无法测算";
       setTone(out("safetyMargin"), safety);
       out("stickySales").textContent = money(sales);
+      out("stickySalesNote").innerHTML = num("avgTicket") > 0
+        ? `
+          <span class="sticky-chip">月单量<b>约${Math.ceil(sales / num("avgTicket"))}单</b></span>
+          <span class="sticky-chip">日均营业额<b>${money(sales / 30)}</b></span>
+          <span class="sticky-chip">客单价<b>${money(num("avgTicket"))}</b></span>
+        `
+        : `
+          <span class="sticky-chip">月单量<b>无法测算</b></span>
+          <span class="sticky-chip">日均营业额<b>${money(sales / 30)}</b></span>
+          <span class="sticky-chip">客单价<b>${money(num("avgTicket"))}</b></span>
+        `;
       out("stickyMonthlyBreakeven").textContent = Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法保本";
-      out("stickyDailyBreakeven").textContent = Number.isFinite(dailyBreakeven) ? money(dailyBreakeven) : "无法保本";
       out("stickyBreakevenOrders").textContent = Number.isFinite(dailyOrders) ? `${Math.ceil(dailyOrders)}单` : "无法测算";
       out("stickyMonthlyProfit").textContent = money(monthlyProfit);
       setTone(out("stickyMonthlyProfit"), monthlyProfit);
