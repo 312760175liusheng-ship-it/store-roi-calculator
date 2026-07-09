@@ -18,6 +18,14 @@
       --gold: #b67a14;
       --ink: #2b2925;
       --shadow: 0 18px 46px rgba(55, 43, 25, 0.08);
+      --chart-blue: #3d6ea6;
+      --chart-teal: #009e94;
+      --chart-rose: #a63d72;
+      --chart-green: #0e8a76;
+      --gain: var(--red);
+      --gain-chart: var(--red);
+      --loss: var(--green);
+      --loss-chart: var(--chart-green);
     }
 
     * {
@@ -93,16 +101,17 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       width: 100%;
       min-width: 0;
-      height: 42px;
+      height: 30px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--panel);
       color: var(--ink);
       cursor: pointer;
       box-shadow: 0 8px 18px rgba(55, 43, 25, 0.05);
+      font-size: 12px;
     }
 
     .lock-btn.is-locked {
@@ -112,8 +121,8 @@
     }
 
     .lock-meta {
-      min-height: 18px;
-      margin-top: 8px;
+      min-height: 14px;
+      margin-top: 5px;
       color: var(--muted);
       font-size: 12px;
       text-align: center;
@@ -130,8 +139,8 @@
       position: sticky;
       top: 0;
       z-index: 4;
-      margin-bottom: 12px;
-      padding: 8px;
+      margin-bottom: 10px;
+      padding: 6px;
       border: 1px solid rgba(230, 223, 210, 0.9);
       border-radius: 8px;
       background: rgba(245, 241, 233, 0.94);
@@ -142,12 +151,12 @@
     .sticky-board-grid {
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 8px;
+      gap: 6px;
     }
 
     .sticky-card {
-      min-height: 78px;
-      padding: 12px;
+      min-height: 56px;
+      padding: 8px 10px;
       border: 1px solid rgba(230, 223, 210, 0.9);
       border-radius: 8px;
       background: var(--panel);
@@ -167,67 +176,68 @@
 
     .sticky-card.is-wide {
       grid-column: span 2;
-      min-height: 108px;
-      padding: 14px 16px;
+      min-height: 56px;
+      padding: 8px 12px;
     }
 
     .sticky-label {
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       line-height: 1.2;
     }
 
     .sticky-value {
-      margin-top: 8px;
-      font-size: clamp(18px, 2.3vw, 26px);
+      margin-top: 4px;
+      font-size: clamp(15px, 1.8vw, 20px);
       font-weight: 750;
       line-height: 1.05;
       overflow-wrap: anywhere;
     }
 
     .sticky-note {
-      margin-top: 6px;
+      margin-top: 3px;
       color: var(--muted);
-      font-size: 11px;
-      line-height: 1.25;
+      font-size: 10px;
+      line-height: 1.2;
     }
 
     .sticky-note b {
       display: block;
-      margin-top: 4px;
+      margin-top: 2px;
       color: var(--text);
-      font-size: 13px;
-      line-height: 1.2;
+      font-size: 12px;
+      line-height: 1.15;
     }
 
     .sticky-card.is-wide .sticky-value {
-      margin-top: 10px;
-      font-size: clamp(32px, 4vw, 44px);
+      margin-top: 4px;
+      font-size: clamp(26px, 3.2vw, 34px);
     }
 
     .sticky-card.is-wide .sticky-note {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 12px;
-      font-size: 13px;
-      line-height: 1.25;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2px 16px;
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.2;
     }
 
     .sticky-chip {
-      padding: 7px 8px;
-      border-radius: 8px;
-      background: rgba(245, 241, 233, 0.72);
-      color: var(--text);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 3px 0;
+      color: var(--muted);
       white-space: nowrap;
-      text-align: center;
     }
 
     .sticky-chip b {
-      display: block;
-      margin-top: 2px;
-      font-size: 16px;
-      line-height: 1.15;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 750;
+      line-height: 1.1;
     }
 
     .sticky-card.action-card {
@@ -239,17 +249,17 @@
     .quick-scenarios {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-top: 8px;
+      gap: 5px;
+      margin-top: 5px;
     }
 
     .scenario-pill {
-      height: 30px;
+      height: 22px;
       border: 0;
       border-radius: 999px;
       background: rgba(245, 241, 233, 0.9);
       color: var(--green);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 750;
       cursor: pointer;
     }
@@ -262,16 +272,16 @@
     .action-links {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 6px;
+      gap: 5px;
     }
 
     .action-link {
-      height: 30px;
+      height: 22px;
       border: 1px solid rgba(230, 223, 210, 0.9);
       border-radius: 999px;
       background: var(--panel-soft);
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       cursor: pointer;
     }
 
@@ -315,15 +325,235 @@
     }
 
     .positive {
-      color: var(--green);
+      color: var(--gain);
     }
 
     .negative {
-      color: var(--red);
+      color: var(--loss);
     }
 
     .gold {
       color: var(--gold);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 750;
+      background: rgba(125, 117, 104, 0.12);
+      color: var(--muted);
+    }
+
+    .status-pill.positive {
+      background: rgba(179, 78, 56, 0.12);
+      color: var(--gain);
+    }
+
+    .status-pill.negative {
+      background: rgba(20, 119, 104, 0.12);
+      color: var(--loss);
+    }
+
+    .breakeven-track {
+      position: relative;
+      height: 22px;
+      margin-top: 6px;
+      border-radius: 11px;
+      background: var(--panel-soft);
+      border: 1px solid rgba(230, 223, 210, 0.9);
+    }
+
+    .breakeven-fill {
+      position: absolute;
+      top: 2px;
+      bottom: 2px;
+      left: 2px;
+      width: 0%;
+      border-radius: 9px;
+      background: var(--muted);
+    }
+
+    .breakeven-fill.positive {
+      background: var(--gain-chart);
+    }
+
+    .breakeven-fill.negative {
+      background: var(--loss-chart);
+    }
+
+    .breakeven-marker {
+      position: absolute;
+      top: -5px;
+      bottom: -5px;
+      left: 0%;
+      border-left: 2px dashed var(--ink);
+    }
+
+    .breakeven-legend,
+    .cost-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .breakeven-legend-item,
+    .cost-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .breakeven-legend-item b,
+    .cost-legend-item b {
+      color: var(--text);
+      font-weight: 750;
+      margin-left: 2px;
+    }
+
+    .cost-legend-item em {
+      font-style: normal;
+      color: var(--muted);
+      font-size: 11px;
+      margin-left: 1px;
+    }
+
+    .breakeven-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      flex: none;
+    }
+
+    .breakeven-dot.positive {
+      background: var(--gain-chart);
+    }
+
+    .breakeven-dot.negative {
+      background: var(--loss-chart);
+    }
+
+    .breakeven-dot-marker {
+      width: 10px;
+      height: 0;
+      border-radius: 0;
+      border-top: 2px dashed var(--ink);
+      background: none;
+    }
+
+    .breakeven-caption {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .breakeven-caption.positive {
+      color: var(--gain);
+    }
+
+    .breakeven-caption.negative {
+      color: var(--loss);
+    }
+
+    .cost-bar-block {
+      margin-bottom: 18px;
+    }
+
+    .cost-bar {
+      position: relative;
+      display: flex;
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--panel-soft);
+      border: 1px solid rgba(230, 223, 210, 0.9);
+    }
+
+    .cost-seg {
+      height: 100%;
+      flex: 0 0 auto;
+      width: 0%;
+    }
+
+    .cost-seg + .cost-seg {
+      margin-left: 2px;
+    }
+
+    .cost-seg-variable {
+      background: var(--chart-blue);
+    }
+
+    .cost-seg-payroll {
+      background: var(--chart-teal);
+    }
+
+    .cost-seg-fixed {
+      background: var(--chart-rose);
+    }
+
+    .cost-seg-depreciation {
+      background: var(--gold);
+    }
+
+    .cost-seg-profit {
+      margin-left: 2px;
+      background: var(--gain-chart);
+    }
+
+    .cost-bar-marker {
+      position: absolute;
+      top: -4px;
+      bottom: -4px;
+      left: 0%;
+      display: none;
+      border-left: 2px dashed var(--loss-chart);
+    }
+
+    .cost-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      display: inline-block;
+      flex: none;
+    }
+
+    .cost-dot-variable {
+      background: var(--chart-blue);
+    }
+
+    .cost-dot-payroll {
+      background: var(--chart-teal);
+    }
+
+    .cost-dot-fixed {
+      background: var(--chart-rose);
+    }
+
+    .cost-dot-depreciation {
+      background: var(--gold);
+    }
+
+    .cost-dot-profit {
+      background: var(--gain-chart);
+    }
+
+    .cost-dot-profit.negative {
+      background: var(--loss-chart);
+    }
+
+    .cost-bar-caption {
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 750;
+      color: var(--loss);
     }
 
     .panel {
@@ -391,6 +621,13 @@
       color: var(--ink);
       font-weight: 650;
       white-space: nowrap;
+    }
+
+    .readonly-hint {
+      margin-top: -3px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.3;
     }
 
     input[type="number"] {
@@ -699,7 +936,7 @@
 
     <section class="sticky-board" aria-label="实时经营看板">
       <div class="sticky-board-grid">
-        <div class="sticky-card is-wide" data-jump-target="dailyTables">
+        <div class="sticky-card is-wide" data-jump-target="monthlySales">
           <div class="sticky-label">月营业额</div>
           <div class="sticky-value" id="stickySales">¥0</div>
           <div class="sticky-note" id="stickySalesNote">当前推演</div>
@@ -707,12 +944,12 @@
         <div class="sticky-card" data-jump-target="grossMargin">
           <div class="sticky-label">每月保本营业额</div>
           <div class="sticky-value" id="stickyMonthlyBreakeven">¥0</div>
-          <div class="sticky-note" id="stickyBreakevenNote">含工资、固定成本、比例费用和折旧</div>
+          <div class="sticky-note" id="stickyBreakevenNote">含工资、固定成本、营销费用和折旧</div>
         </div>
-        <div class="sticky-card" data-jump-target="dailyTables">
+        <div class="sticky-card" data-jump-target="monthlySales">
           <div class="sticky-label">月净利润</div>
           <div class="sticky-value" id="stickyMonthlyProfit">¥0</div>
-          <div class="sticky-note">扣除工资、固定成本、比例费用和折旧</div>
+          <div class="sticky-note">扣除工资、固定成本、营销费用和折旧</div>
         </div>
         <div class="sticky-card action-card">
           <button class="lock-btn" id="lockBtn" type="button" aria-pressed="false">
@@ -742,10 +979,10 @@
         <div class="metric-value" id="totalInvestment">¥0</div>
         <div class="metric-note">启动资金与预留资金合计</div>
       </div>
-      <div class="metric" data-jump-target="dailyTables">
+      <div class="metric" data-jump-target="monthlySales">
         <div class="metric-label">月净利润</div>
         <div class="metric-value positive" id="monthlyProfit">¥0</div>
-        <div class="metric-note">毛利扣除工资、固定成本、比例费用和折旧</div>
+        <div class="metric-note">毛利扣除工资、固定成本、营销费用和折旧</div>
       </div>
       <div class="metric" data-jump-target="depreciationYears">
         <div class="metric-label">月折旧成本</div>
@@ -767,11 +1004,27 @@
         <div class="metric-value positive" id="partnerProfit">¥0</div>
         <div class="metric-note">折旧 + 工资 + 经营净利</div>
       </div>
-      <div class="metric" data-jump-target="dailyTables">
+      <div class="metric" data-jump-target="monthlySales">
         <div class="metric-label">安全边际</div>
         <div class="metric-value" id="safetyMargin">¥0</div>
         <div class="metric-note">月营业额 - 每月保本营业额</div>
       </div>
+    </section>
+
+    <section class="panel panel-pad" aria-label="营业额与保本点对比">
+      <div class="section-title">
+        <h2>营业额 vs 保本点</h2>
+        <span class="status-pill" id="breakevenStatusPill">盈利中</span>
+      </div>
+      <div class="breakeven-track">
+        <div class="breakeven-fill" id="breakevenFill"></div>
+        <div class="breakeven-marker" id="breakevenMarker"></div>
+      </div>
+      <div class="breakeven-legend">
+        <span class="breakeven-legend-item"><i class="breakeven-dot" id="breakevenFillDot"></i>月营业额 <b id="breakevenSalesTag">¥0</b></span>
+        <span class="breakeven-legend-item"><i class="breakeven-dot breakeven-dot-marker"></i>保本点 <b id="breakevenPointTag">¥0</b></span>
+      </div>
+      <div class="breakeven-caption" id="breakevenCaption">距保本点还差 ¥0</div>
     </section>
 
     <section class="panel panel-pad">
@@ -779,9 +1032,29 @@
         <h2>经营结果</h2>
         <span>根据客流、桌均消费和成本实时计算</span>
       </div>
+      <div class="cost-bar-block">
+        <div class="cost-bar-wrap">
+          <div class="cost-bar" id="costBar">
+            <div class="cost-seg cost-seg-variable" id="costSegVariable" title="营销费用"></div>
+            <div class="cost-seg cost-seg-payroll" id="costSegPayroll" title="工资总成本"></div>
+            <div class="cost-seg cost-seg-fixed" id="costSegFixed" title="固定成本"></div>
+            <div class="cost-seg cost-seg-depreciation" id="costSegDepreciation" title="月折旧成本"></div>
+            <div class="cost-seg cost-seg-profit" id="costSegProfit" title="月净利润"></div>
+            <div class="cost-bar-marker" id="costBarMarker"></div>
+          </div>
+        </div>
+        <div class="cost-legend">
+          <span class="cost-legend-item"><i class="cost-dot cost-dot-variable"></i>营销费用 <b id="costLegendVariable">¥0</b> <em id="costLegendVariablePct">0%</em></span>
+          <span class="cost-legend-item"><i class="cost-dot cost-dot-payroll"></i>工资 <b id="costLegendPayroll">¥0</b> <em id="costLegendPayrollPct">0%</em></span>
+          <span class="cost-legend-item"><i class="cost-dot cost-dot-fixed"></i>固定成本 <b id="costLegendFixed">¥0</b> <em id="costLegendFixedPct">0%</em></span>
+          <span class="cost-legend-item"><i class="cost-dot cost-dot-depreciation"></i>折旧 <b id="costLegendDepreciation">¥0</b> <em id="costLegendDepreciationPct">0%</em></span>
+          <span class="cost-legend-item"><i class="cost-dot cost-dot-profit" id="costLegendProfitDot"></i>净利润 <b id="costLegendProfit">¥0</b> <em id="costLegendProfitPct">0%</em></span>
+        </div>
+        <div class="cost-bar-caption" id="costBarCaption" style="display:none"></div>
+      </div>
       <div class="breakdown">
         <div class="row"><span>月营业额</span><strong id="salesOut">¥0</strong></div>
-        <div class="row"><span>月比例费用</span><strong id="variableFeeOut">¥0</strong></div>
+        <div class="row"><span>月营销费用</span><strong id="variableFeeOut">¥0</strong></div>
         <div class="row"><span>月毛利</span><strong id="grossProfitOut">¥0</strong></div>
         <div class="row"><span>工资总成本</span><strong id="totalPayrollOut">¥0</strong></div>
         <div class="row"><span>固定成本</span><strong id="fixedCostOut">¥0</strong></div>
@@ -793,14 +1066,14 @@
     <section class="main-grid">
       <div class="panel panel-pad">
         <div class="section-title">
-          <h2>营业额比例费用</h2>
+          <h2>营销费用</h2>
           <span>按月营业额自动计算</span>
         </div>
         <div class="breakdown">
           <div class="row"><span>网络推广费 3%</span><strong id="promotionFeeOut">¥0</strong></div>
           <div class="row"><span>包装费 0.5%</span><strong id="packingFeeOut">¥0</strong></div>
           <div class="row"><span>美团管理费 0.2%</span><strong id="meituanFeeOut">¥0</strong></div>
-          <div class="row"><span>比例费用合计</span><strong id="variableFeeTotalOut">¥0</strong></div>
+          <div class="row"><span>营销费用合计</span><strong id="variableFeeTotalOut">¥0</strong></div>
         </div>
         <div class="formula" id="variableFeeCalcInline"></div>
       </div>
@@ -832,15 +1105,23 @@
       <div class="panel panel-pad">
         <div class="section-title">
           <h2>经营参数</h2>
-          <span>按每日桌数和桌均消费测算</span>
+          <span>按月总营业额和桌均消费测算，每日桌数自动反推</span>
         </div>
         <div class="form-grid">
           <div class="field wide">
-            <label for="dailyTables">
-              <span>每日桌数</span>
+            <label for="monthlySales">
+              <span>月总营业额</span>
+              <span class="value-chip" id="monthlySalesChip">¥108,000</span>
+            </label>
+            <input id="monthlySales" type="range" min="0" max="500000" step="1000" value="108000">
+          </div>
+          <div class="field wide">
+            <label>
+              <span>每日桌数（自动反推，不能手动调）</span>
               <span class="value-chip" id="dailyTablesChip">30桌</span>
             </label>
-            <input id="dailyTables" type="range" min="0" max="300" step="1" value="30">
+            <div class="readonly-hint">= 月总营业额 ÷ 30 ÷ 每桌消费，随上面的营业额和下面的每桌消费自动变化</div>
+            <input id="dailyTables" type="hidden" value="30">
           </div>
           <div class="field wide">
             <label for="tableSpend">
@@ -1060,7 +1341,7 @@
         <div class="formula-guide-body">
           <div class="formula-block">
             <h3>调整数据</h3>
-            先调整总投资、折旧年限、每日桌数、每桌消费和毛利率。<br>
+            先调整总投资、折旧年限、月总营业额、每桌消费和毛利率；每日桌数会自动反推，不用手动调。<br>
             顶部看板和下方结果会自动同步变化。<br>
             未锁定时，点击顶部或结果卡片可快速跳到对应滑块。
           </div>
@@ -1090,9 +1371,9 @@
         <div class="formula-guide-body">
           <div class="formula-block">
             <h3>保本营业额</h3>
-            月营业额 = 每日桌数 × 每桌消费 × 30天<br>
+            月营业额由滑块直接设定；每日桌数 = 月营业额 ÷ 30 ÷ 每桌消费（自动反推）<br>
             固定成本合计 = 房租 + 水电 + 物业 + 其他 + 燃料费 + 低值易耗<br>
-            比例费用合计 = 月营业额 × 3.7%<br>
+            营销费用合计 = 月营业额 × 3.7%<br>
             工资总成本 = 店长工资 + 普通员工工资 + 股东工资<br>
             成本合计 = 店长底薪 + 普通员工工资 + 股东工资 + 固定成本 + 月折旧成本<br>
             基础保本营业额 = 成本合计 ÷ (毛利率 - 3.7%)<br>
@@ -1113,8 +1394,8 @@
             <h3>利润</h3>
             月毛利 = 月营业额 × 毛利率<br>
             月折旧成本 = 总投资 ÷ 折旧年限 ÷ 12个月<br>
-            比例费用 = 网络推广费 + 包装费 + 美团管理费<br>
-            月净利润 = 月毛利 - 比例费用 - 工资总成本 - 固定成本 - 月折旧成本<br>
+            营销费用 = 网络推广费 + 包装费 + 美团管理费<br>
+            月净利润 = 月毛利 - 营销费用 - 工资总成本 - 固定成本 - 月折旧成本<br>
             年化回报率 = 月净利润 × 12 ÷ 总投资<br>
             合伙人获利 = 月折旧成本 + 股东工资 + 月净利润
             <div class="formula-live" id="profitCalc"></div>
@@ -1149,7 +1430,7 @@
     });
 
     const ids = [
-      "investment", "depreciationYears", "dailyTables", "tableSpend", "grossMargin",
+      "investment", "depreciationYears", "monthlySales", "dailyTables", "tableSpend", "grossMargin",
       "managerBase", "staffCount", "staffSalary", "rentCost", "utilityCost",
       "propertyCost", "otherCost", "fuelCost", "consumableCost", "partnerBaseSalary", "partnerCount"
     ];
@@ -1162,9 +1443,16 @@
     let locked = false;
     let lockedAt = "";
 
+    function migrateMonthlySales(values) {
+      if (values.monthlySales == null && values.dailyTables != null && values.tableSpend != null) {
+        values.monthlySales = Number(values.dailyTables) * Number(values.tableSpend) * 30;
+      }
+      return values;
+    }
+
     function loadSavedValues() {
       try {
-        const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+        const saved = migrateMonthlySales(JSON.parse(localStorage.getItem(storageKey) || "{}"));
         ids.forEach((id) => {
           if (saved[id] != null && inputs[id]) {
             inputs[id].value = saved[id];
@@ -1245,9 +1533,10 @@
       if (locked) return;
       const scenario = readScenarios()[slot];
       if (!scenario) return;
+      const values = migrateMonthlySales({ ...scenario.values });
       ids.forEach((id) => {
-        if (scenario.values[id] != null) {
-          inputs[id].value = scenario.values[id];
+        if (values[id] != null) {
+          inputs[id].value = values[id];
         }
       });
       saveValues();
@@ -1272,7 +1561,7 @@
     }
 
     function calcMonthlySales() {
-      return num("dailyTables") * num("tableSpend") * 30;
+      return num("monthlySales");
     }
 
     function calcVariableFees(sales) {
@@ -1333,6 +1622,8 @@
 
     function render() {
       const investment = num("investment");
+      const derivedTableSpend = num("tableSpend");
+      inputs.dailyTables.value = derivedTableSpend > 0 ? num("monthlySales") / 30 / derivedTableSpend : 0;
       const sales = calcMonthlySales();
       const baseTarget = calcBaseTarget();
       const grossProfit = sales * (num("grossMargin") / 100);
@@ -1357,7 +1648,8 @@
 
       out("investmentChip").textContent = money(investment);
       out("depreciationYearsChip").textContent = `${num("depreciationYears")}年`;
-      out("dailyTablesChip").textContent = `${num("dailyTables")}桌`;
+      out("monthlySalesChip").textContent = money(num("monthlySales"));
+      out("dailyTablesChip").textContent = `${Math.round(num("dailyTables"))}桌`;
       out("tableSpendChip").textContent = money(num("tableSpend"));
       out("grossMarginChip").textContent = `${num("grossMargin")}%`;
       out("managerBaseChip").textContent = money(num("managerBase"));
@@ -1385,24 +1677,99 @@
       out("dailyBreakevenNote").textContent = Number.isFinite(dailyOrders) ? `约 ${Math.ceil(dailyOrders)} 桌/天` : "当前参数下无法测算";
       out("safetyMargin").textContent = Number.isFinite(safety) ? money(safety) : "无法测算";
       setTone(out("safetyMargin"), safety);
+
+      const breakevenIsProfit = Number.isFinite(safety) ? safety >= 0 : false;
+      const breakevenScaleMax = Number.isFinite(monthlyBreakeven)
+        ? Math.max(sales, monthlyBreakeven, 1) * 1.15
+        : Math.max(sales, 1) * 1.15;
+      const breakevenFillPct = Math.min(100, (sales / breakevenScaleMax) * 100);
+      const breakevenFillEl = out("breakevenFill");
+      breakevenFillEl.style.width = `${breakevenFillPct}%`;
+      breakevenFillEl.classList.toggle("positive", breakevenIsProfit);
+      breakevenFillEl.classList.toggle("negative", !breakevenIsProfit);
+      out("breakevenFillDot").classList.toggle("positive", breakevenIsProfit);
+      out("breakevenFillDot").classList.toggle("negative", !breakevenIsProfit);
+
+      const breakevenMarkerEl = out("breakevenMarker");
+      if (Number.isFinite(monthlyBreakeven)) {
+        breakevenMarkerEl.style.display = "";
+        breakevenMarkerEl.style.left = `${Math.min(100, (monthlyBreakeven / breakevenScaleMax) * 100)}%`;
+      } else {
+        breakevenMarkerEl.style.display = "none";
+      }
+
+      out("breakevenSalesTag").textContent = money(sales);
+      out("breakevenPointTag").textContent = Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法测算";
+
+      const breakevenStatusEl = out("breakevenStatusPill");
+      breakevenStatusEl.classList.toggle("positive", Number.isFinite(monthlyBreakeven) && breakevenIsProfit);
+      breakevenStatusEl.classList.toggle("negative", Number.isFinite(monthlyBreakeven) && !breakevenIsProfit);
+      breakevenStatusEl.textContent = Number.isFinite(monthlyBreakeven) ? (breakevenIsProfit ? "盈利中" : "未达保本") : "无法测算";
+
+      const breakevenCaptionEl = out("breakevenCaption");
+      breakevenCaptionEl.classList.toggle("positive", breakevenIsProfit);
+      breakevenCaptionEl.classList.toggle("negative", !breakevenIsProfit);
+      breakevenCaptionEl.textContent = Number.isFinite(safety)
+        ? (breakevenIsProfit ? `已超保本点 ${money(safety)}` : `距保本点还差 ${money(-safety)}`)
+        : "当前参数下无法保本，暂无法对比";
+
+      const costTotal = variableFees.total + payroll + fixedCost + depreciation;
+      const costScaleMax = Math.max(grossProfit, costTotal, 1);
+      const costPct = (value) => Math.max(0, (value / costScaleMax) * 100);
+      out("costSegVariable").style.width = `${costPct(variableFees.total)}%`;
+      out("costSegPayroll").style.width = `${costPct(payroll)}%`;
+      out("costSegFixed").style.width = `${costPct(fixedCost)}%`;
+      out("costSegDepreciation").style.width = `${costPct(depreciation)}%`;
+
+      const costSegProfitEl = out("costSegProfit");
+      const costBarMarkerEl = out("costBarMarker");
+      const costBarCaptionEl = out("costBarCaption");
+      const costLegendProfitDotEl = out("costLegendProfitDot");
+      if (monthlyProfit >= 0) {
+        costSegProfitEl.style.display = "";
+        costSegProfitEl.style.width = `${costPct(monthlyProfit)}%`;
+        costBarMarkerEl.style.display = "none";
+        costBarCaptionEl.style.display = "none";
+        costLegendProfitDotEl.classList.remove("negative");
+      } else {
+        costSegProfitEl.style.display = "none";
+        costBarMarkerEl.style.display = "block";
+        costBarMarkerEl.style.left = `${Math.min(100, costPct(grossProfit))}%`;
+        costBarCaptionEl.style.display = "";
+        costBarCaptionEl.textContent = `月毛利不够覆盖成本，缺口 ${money(-monthlyProfit)}`;
+        costLegendProfitDotEl.classList.add("negative");
+      }
+
+      const pctOfGrossProfit = (value) => grossProfit > 0 ? `${Math.round((value / grossProfit) * 100)}%` : "—";
+      out("costLegendVariable").textContent = money(variableFees.total);
+      out("costLegendVariablePct").textContent = pctOfGrossProfit(variableFees.total);
+      out("costLegendPayroll").textContent = money(payroll);
+      out("costLegendPayrollPct").textContent = pctOfGrossProfit(payroll);
+      out("costLegendFixed").textContent = money(fixedCost);
+      out("costLegendFixedPct").textContent = pctOfGrossProfit(fixedCost);
+      out("costLegendDepreciation").textContent = money(depreciation);
+      out("costLegendDepreciationPct").textContent = pctOfGrossProfit(depreciation);
+      out("costLegendProfit").textContent = money(monthlyProfit);
+      out("costLegendProfitPct").textContent = pctOfGrossProfit(monthlyProfit);
+
       out("stickySales").textContent = money(sales);
       out("stickySalesNote").innerHTML = num("tableSpend") > 0
         ? `
-          <span class="sticky-chip" data-jump-target="dailyTables">月桌数<b>约${Math.round(num("dailyTables") * 30)}桌</b></span>
-          <span class="sticky-chip" data-jump-target="dailyTables">日桌数<b>约${Math.ceil(currentDailyTables)}桌</b></span>
+          <span class="sticky-chip" data-jump-target="monthlySales">月桌数<b>约${Math.round(num("dailyTables") * 30)}桌</b></span>
+          <span class="sticky-chip" data-jump-target="monthlySales">日桌数<b>约${Math.round(currentDailyTables)}桌</b></span>
           <span class="sticky-chip" data-jump-target="tableSpend">日均营业额<b>${money(sales / 30)}</b></span>
           <span class="sticky-chip" data-jump-target="tableSpend">每桌消费<b>${money(num("tableSpend"))}</b></span>
         `
         : `
-          <span class="sticky-chip" data-jump-target="dailyTables">月桌数<b>无法测算</b></span>
-          <span class="sticky-chip" data-jump-target="dailyTables">日桌数<b>无法测算</b></span>
+          <span class="sticky-chip" data-jump-target="monthlySales">月桌数<b>无法测算</b></span>
+          <span class="sticky-chip" data-jump-target="monthlySales">日桌数<b>无法测算</b></span>
           <span class="sticky-chip" data-jump-target="tableSpend">日均营业额<b>${money(sales / 30)}</b></span>
           <span class="sticky-chip" data-jump-target="tableSpend">每桌消费<b>${money(num("tableSpend"))}</b></span>
         `;
       out("stickyMonthlyBreakeven").textContent = Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法保本";
       out("stickyBreakevenNote").innerHTML = Number.isFinite(dailyOrders)
-        ? `含工资、固定成本、比例费用和折旧<b>保本桌数：${Math.ceil(dailyOrders)}桌/天</b>`
-        : `含工资、固定成本、比例费用和折旧<b>保本桌数：无法测算</b>`;
+        ? `含工资、固定成本、营销费用和折旧<b>保本桌数：${Math.ceil(dailyOrders)}桌/天</b>`
+        : `含工资、固定成本、营销费用和折旧<b>保本桌数：无法测算</b>`;
       out("stickyMonthlyProfit").textContent = money(monthlyProfit);
       setTone(out("stickyMonthlyProfit"), monthlyProfit);
 
@@ -1413,9 +1780,9 @@
       out("fixedCostOut").textContent = money(fixedCost);
       out("depreciationOut").textContent = money(depreciation);
       out("resultCalcInline").innerHTML = `
-        月营业额 <b>${money(sales)}</b> = ${num("dailyTables")}桌 × ${money(num("tableSpend"))} × 30天<br>
+        月营业额 <b>${money(sales)}</b>（滑块直接设定，约合每日 ${Math.round(num("dailyTables"))}桌 × ${money(num("tableSpend"))}）<br>
         月毛利 <b>${money(grossProfit)}</b> = 月营业额 ${money(sales)} × 毛利率 ${num("grossMargin")}%<br>
-        月净利润 <b>${money(monthlyProfit)}</b> = 月毛利 ${money(grossProfit)} - 比例费用 ${money(variableFees.total)} - 工资 ${money(payroll)} - 固定成本 ${money(fixedCost)} - 折旧 ${money(depreciation)}
+        月净利润 <b>${money(monthlyProfit)}</b> = 月毛利 ${money(grossProfit)} - 营销费用 ${money(variableFees.total)} - 工资 ${money(payroll)} - 固定成本 ${money(fixedCost)} - 折旧 ${money(depreciation)}
       `;
       out("promotionFeeOut").textContent = money(variableFees.promotion);
       out("packingFeeOut").textContent = money(variableFees.packing);
@@ -1425,7 +1792,7 @@
         网络推广费 <b>${money(variableFees.promotion)}</b> = 月营业额 ${money(sales)} × 3%<br>
         包装费 <b>${money(variableFees.packing)}</b> = 月营业额 ${money(sales)} × 0.5%<br>
         美团管理费 <b>${money(variableFees.meituan)}</b> = 月营业额 ${money(sales)} × 0.2%<br>
-        比例费用合计 <b>${money(variableFees.total)}</b> = 月营业额 ${money(sales)} × 3.7%
+        营销费用合计 <b>${money(variableFees.total)}</b> = 月营业额 ${money(sales)} × 3.7%
       `;
       out("investmentCalcInline").innerHTML = `
         月折旧成本 <b>${money(depreciation)}</b> = 总投资 ${money(investment)} ÷ ${num("depreciationYears")}年 ÷ 12个月
@@ -1446,8 +1813,8 @@
       out("dailyBreakevenOrders").textContent = Number.isFinite(dailyOrders) ? `${Math.ceil(dailyOrders)}桌` : "无法测算";
       out("currentDailySales").textContent = money(sales / 30);
       out("salesCalcInline").innerHTML = `
-        月营业额 <b>${money(sales)}</b> = 每日桌数 ${num("dailyTables")}桌 × 每桌消费 ${money(num("tableSpend"))} × 30天<br>
-        日均营业额 <b>${money(sales / 30)}</b> = 每日桌数 ${num("dailyTables")}桌 × 每桌消费 ${money(num("tableSpend"))}
+        月营业额 <b>${money(sales)}</b>（直接设定）；每日桌数 <b>约${Math.round(num("dailyTables"))}桌</b> = 月营业额 ÷ 30 ÷ 每桌消费 ${money(num("tableSpend"))}<br>
+        日均营业额 <b>${money(sales / 30)}</b> = 月营业额 ${money(sales)} ÷ 30天
       `;
       out("fixedCostCalcInline").innerHTML = `
         固定成本合计 <b>${money(fixedCost)}</b> = 房租 ${money(num("rentCost"))} + 水电 ${money(num("utilityCost"))} + 物业 ${money(num("propertyCost"))} + 其他 ${money(num("otherCost"))} + 燃料费 ${money(num("fuelCost"))} + 低值易耗 ${money(num("consumableCost"))}
@@ -1456,7 +1823,7 @@
         股东工资 <b>${money(partnerSalary)}</b> = 股东底薪 ${money(num("partnerBaseSalary"))} × 股东人数 ${num("partnerCount")}人
       `;
       out("breakevenCalcInline").innerHTML = `
-        基础保本营业额 <b>${Number.isFinite(baseTarget) ? money(baseTarget) : "无法测算"}</b> = 基础成本 ${money(calcBaseCost())} ÷ (毛利率 ${num("grossMargin")}% - 比例费用率 3.7%)<br>
+        基础保本营业额 <b>${Number.isFinite(baseTarget) ? money(baseTarget) : "无法测算"}</b> = 基础成本 ${money(calcBaseCost())} ÷ (毛利率 ${num("grossMargin")}% - 营销费用率 3.7%)<br>
         月保本营业额 <b>${Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法测算"}</b> = (基础成本 ${money(calcBaseCost())} + 第一档提成 ${Number.isFinite(baseTarget) ? money(baseTarget * 0.03) : "无法测算"}) ÷ (毛利率 ${num("grossMargin")}% - 3.7%)<br>
         每日保本营业额 <b>${Number.isFinite(dailyBreakeven) ? money(dailyBreakeven) : "无法测算"}</b> = 月保本营业额 ÷ 30天<br>
         每日保本桌数 <b>${Number.isFinite(dailyOrders) ? `${Math.ceil(dailyOrders)}桌` : "无法测算"}</b> = 每日保本营业额 ÷ 每桌消费 ${money(num("tableSpend"))}
@@ -1486,9 +1853,9 @@
       `;
       out("breakevenCalc").innerHTML = `
         当前计算：<br>
-        月营业额 <b>${money(sales)}</b> = 每日桌数 ${num("dailyTables")}桌 × 每桌消费 ${money(num("tableSpend"))} × 30天<br>
+        月营业额 <b>${money(sales)}</b>（直接设定，对应每日桌数约${Math.round(num("dailyTables"))}桌）<br>
         固定成本 <b>${money(fixedCost)}</b> = 房租 ${money(num("rentCost"))} + 水电 ${money(num("utilityCost"))} + 物业 ${money(num("propertyCost"))} + 其他 ${money(num("otherCost"))} + 燃料费 ${money(num("fuelCost"))} + 低值易耗 ${money(num("consumableCost"))}<br>
-        比例费用率 <b>3.7%</b> = 网络推广 3% + 包装 0.5% + 美团管理 0.2%<br>
+        营销费用率 <b>3.7%</b> = 网络推广 3% + 包装 0.5% + 美团管理 0.2%<br>
         基础成本 <b>${money(calcBaseCost())}</b> = 店长底薪 ${money(num("managerBase"))} + 员工工资 ${money(staffPay)} + 股东工资 ${money(partnerSalary)} + 固定成本 ${money(fixedCost)} + 折旧 ${money(depreciation)}<br>
         基础保本营业额 <b>${Number.isFinite(baseTarget) ? money(baseTarget) : "无法测算"}</b> = 基础成本 ÷ (${num("grossMargin")}% - 3.7%)<br>
         月保本营业额 <b>${Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法测算"}</b> = (基础成本 + 第一档提成 ${Number.isFinite(baseTarget) ? money(baseTarget * 0.03) : "无法测算"}) ÷ (${num("grossMargin")}% - 3.7%)
@@ -1503,8 +1870,8 @@
       out("profitCalc").innerHTML = `
         当前计算：<br>
         月毛利 <b>${money(grossProfit)}</b> = 月营业额 ${money(sales)} × ${num("grossMargin")}%<br>
-        比例费用 <b>${money(variableFees.total)}</b> = 网络推广 ${money(variableFees.promotion)} + 包装 ${money(variableFees.packing)} + 美团管理 ${money(variableFees.meituan)}<br>
-        月净利润 <b>${money(monthlyProfit)}</b> = 月毛利 ${money(grossProfit)} - 比例费用 ${money(variableFees.total)} - 工资 ${money(payroll)} - 固定成本 ${money(fixedCost)} - 折旧 ${money(depreciation)}<br>
+        营销费用 <b>${money(variableFees.total)}</b> = 网络推广 ${money(variableFees.promotion)} + 包装 ${money(variableFees.packing)} + 美团管理 ${money(variableFees.meituan)}<br>
+        月净利润 <b>${money(monthlyProfit)}</b> = 月毛利 ${money(grossProfit)} - 营销费用 ${money(variableFees.total)} - 工资 ${money(payroll)} - 固定成本 ${money(fixedCost)} - 折旧 ${money(depreciation)}<br>
         年化回报率 <b>${pct.format(annualRoi)}%</b> = 月净利润 ${money(monthlyProfit)} × 12 ÷ 总投资 ${money(investment)}<br>
         合伙人获利 <b>${money(partnerTotalBenefit)}</b> = 折旧 ${money(depreciation)} + 股东工资 ${money(partnerSalary)} + 月净利润 ${money(monthlyProfit)}
       `;
