@@ -574,6 +574,26 @@
       align-items: start;
     }
 
+    body.locked .main-grid {
+      display: none;
+    }
+
+    .boss-mode-hint {
+      display: none;
+      margin: -6px 0 12px;
+      padding: 10px 14px;
+      border: 1px solid rgba(230, 223, 210, 0.9);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    body.locked .boss-mode-hint {
+      display: block;
+    }
+
     .section-title {
       display: flex;
       align-items: baseline;
@@ -592,6 +612,36 @@
       color: var(--muted);
       font-size: 12px;
       text-align: right;
+    }
+
+    .collapsible-panel > summary {
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .collapsible-panel > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .collapsible-panel > summary:hover h2 {
+      color: var(--green);
+    }
+
+    .collapsible-panel > summary span::after {
+      content: " ▾";
+      color: var(--muted);
+    }
+
+    .collapsible-panel[open] > summary {
+      margin-bottom: 14px;
+    }
+
+    .collapsible-panel[open] > summary span::after {
+      content: " ▴";
+    }
+
+    .collapsible-panel:not([open]) > summary {
+      margin-bottom: 0;
     }
 
     .form-grid {
@@ -621,6 +671,40 @@
       color: var(--ink);
       font-weight: 650;
       white-space: nowrap;
+    }
+
+    .value-chip-editable {
+      cursor: pointer;
+      border-bottom: 1px dashed transparent;
+    }
+
+    .value-chip-editable:hover {
+      border-bottom-color: var(--green);
+    }
+
+    body.locked .value-chip-editable {
+      cursor: default;
+    }
+
+    body.locked .value-chip-editable:hover {
+      border-bottom-color: transparent;
+    }
+
+    .chip-edit-input {
+      width: 84px;
+      max-width: 100%;
+      padding: 1px 4px;
+      border: 1px solid var(--green);
+      border-radius: 4px;
+      font: inherit;
+      font-weight: 650;
+      color: var(--ink);
+      background: var(--panel);
+    }
+
+    .chip-edit-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(20, 119, 104, 0.15);
     }
 
     .readonly-hint {
@@ -675,6 +759,94 @@
       color: var(--text);
       font-weight: 750;
       text-align: right;
+    }
+
+    .waterfall {
+      display: grid;
+      gap: 0;
+      margin-bottom: 18px;
+      padding: 4px 16px;
+      border: 1px solid rgba(230, 223, 210, 0.9);
+      border-radius: 8px;
+      background: var(--panel-soft);
+    }
+
+    .waterfall-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px dashed var(--line);
+      font-size: 14px;
+    }
+
+    .waterfall-row:last-child {
+      border-bottom: 0;
+    }
+
+    .waterfall-row span {
+      color: var(--muted);
+    }
+
+    .waterfall-row em {
+      font-style: normal;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .waterfall-row strong {
+      font-weight: 750;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .waterfall-start {
+      padding-top: 12px;
+    }
+
+    .waterfall-start span,
+    .waterfall-start strong {
+      color: var(--text);
+      font-size: 17px;
+      font-weight: 750;
+    }
+
+    .waterfall-subtotal {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px dashed var(--line);
+      margin-top: -1px;
+    }
+
+    .waterfall-subtotal span,
+    .waterfall-subtotal strong {
+      color: var(--ink);
+      font-weight: 750;
+    }
+
+    .waterfall-total {
+      padding-bottom: 12px;
+      border-top: 2px solid var(--ink);
+      margin-top: 2px;
+    }
+
+    .waterfall-total span {
+      color: var(--text);
+      font-size: 17px;
+      font-weight: 750;
+    }
+
+    .waterfall-total strong {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .waterfall-total strong.positive {
+      color: var(--gain);
+    }
+
+    .waterfall-total strong.negative {
+      color: var(--loss);
     }
 
     .scenario-grid {
@@ -1032,6 +1204,32 @@
         <h2>经营结果</h2>
         <span>根据客流、桌均消费和成本实时计算</span>
       </div>
+      <div class="waterfall" id="resultWaterfall">
+        <div class="waterfall-row waterfall-start">
+          <span>月营业额</span><strong id="salesOut">¥0</strong>
+        </div>
+        <div class="waterfall-row waterfall-minus">
+          <span>－ 原材料及其他成本 <em id="cogsRateNote">(65%)</em></span><strong id="cogsOut">-¥0</strong>
+        </div>
+        <div class="waterfall-row waterfall-subtotal">
+          <span>＝ 月毛利</span><strong id="grossProfitOut">¥0</strong>
+        </div>
+        <div class="waterfall-row waterfall-minus">
+          <span>－ 营销费用</span><strong id="variableFeeOut">-¥0</strong>
+        </div>
+        <div class="waterfall-row waterfall-minus">
+          <span>－ 工资总成本</span><strong id="totalPayrollOut">-¥0</strong>
+        </div>
+        <div class="waterfall-row waterfall-minus">
+          <span>－ 固定成本</span><strong id="fixedCostOut">-¥0</strong>
+        </div>
+        <div class="waterfall-row waterfall-minus">
+          <span>－ 月折旧成本</span><strong id="depreciationOut">-¥0</strong>
+        </div>
+        <div class="waterfall-row waterfall-total">
+          <span>＝ 月净利润</span><strong id="resultProfitOut">¥0</strong>
+        </div>
+      </div>
       <div class="cost-bar-block">
         <div class="cost-bar-wrap">
           <div class="cost-bar" id="costBar">
@@ -1052,27 +1250,43 @@
         </div>
         <div class="cost-bar-caption" id="costBarCaption" style="display:none"></div>
       </div>
-      <div class="breakdown">
-        <div class="row"><span>月营业额</span><strong id="salesOut">¥0</strong></div>
-        <div class="row"><span>月营销费用</span><strong id="variableFeeOut">¥0</strong></div>
-        <div class="row"><span>月毛利</span><strong id="grossProfitOut">¥0</strong></div>
-        <div class="row"><span>工资总成本</span><strong id="totalPayrollOut">¥0</strong></div>
-        <div class="row"><span>固定成本</span><strong id="fixedCostOut">¥0</strong></div>
-        <div class="row"><span>月折旧成本</span><strong id="depreciationOut">¥0</strong></div>
-      </div>
-      <div class="formula" id="resultCalcInline"></div>
     </section>
+
+    <div class="boss-mode-hint">已切换为汇报模式：仅显示以上结论，隐藏了所有滑块和明细公式。点击顶部"已锁定"解锁即可查看完整计算过程。</div>
 
     <section class="main-grid">
       <div class="panel panel-pad">
         <div class="section-title">
           <h2>营销费用</h2>
-          <span>按月营业额自动计算</span>
+          <span>比例可调，按月营业额自动计算</span>
+        </div>
+        <div class="form-grid">
+          <div class="field wide">
+            <label for="promotionRate">
+              <span>网络推广费比例</span>
+              <span class="value-chip" id="promotionRateChip">3%</span>
+            </label>
+            <input id="promotionRate" type="range" min="0" max="10" step="0.1" value="3">
+          </div>
+          <div class="field wide">
+            <label for="packingRate">
+              <span>包装费比例</span>
+              <span class="value-chip" id="packingRateChip">0.5%</span>
+            </label>
+            <input id="packingRate" type="range" min="0" max="5" step="0.1" value="0.5">
+          </div>
+          <div class="field wide">
+            <label for="meituanRate">
+              <span>美团管理费比例</span>
+              <span class="value-chip" id="meituanRateChip">0.2%</span>
+            </label>
+            <input id="meituanRate" type="range" min="0" max="5" step="0.1" value="0.2">
+          </div>
         </div>
         <div class="breakdown">
-          <div class="row"><span>网络推广费 3%</span><strong id="promotionFeeOut">¥0</strong></div>
-          <div class="row"><span>包装费 0.5%</span><strong id="packingFeeOut">¥0</strong></div>
-          <div class="row"><span>美团管理费 0.2%</span><strong id="meituanFeeOut">¥0</strong></div>
+          <div class="row"><span>网络推广费</span><strong id="promotionFeeOut">¥0</strong></div>
+          <div class="row"><span>包装费</span><strong id="packingFeeOut">¥0</strong></div>
+          <div class="row"><span>美团管理费</span><strong id="meituanFeeOut">¥0</strong></div>
           <div class="row"><span>营销费用合计</span><strong id="variableFeeTotalOut">¥0</strong></div>
         </div>
         <div class="formula" id="variableFeeCalcInline"></div>
@@ -1249,19 +1463,19 @@
         <div class="formula" id="partnerSalaryCalcInline"></div>
       </div>
 
-      <div class="panel panel-pad">
-        <div class="section-title">
+      <details class="panel panel-pad collapsible-panel">
+        <summary class="section-title">
           <h2>店长提成</h2>
           <span>保本内3%，超出50%提6%，超出100%提9%</span>
-        </div>
+        </summary>
         <div class="formula" id="commissionFormula"></div>
-      </div>
+      </details>
 
-      <div class="panel panel-pad">
-        <div class="section-title">
+      <details class="panel panel-pad collapsible-panel">
+        <summary class="section-title">
           <h2>每日保本</h2>
           <span>月保本营业额 ÷ 30天</span>
-        </div>
+        </summary>
         <div class="breakdown">
           <div class="row"><span>基础保本营业额</span><strong id="baseBreakevenSales">¥0</strong></div>
           <div class="row"><span>月保本营业额</span><strong id="monthlyBreakevenSales">¥0</strong></div>
@@ -1272,13 +1486,13 @@
           <div class="row"><span>当前日均营业额</span><strong id="currentDailySales">¥0</strong></div>
         </div>
         <div class="formula" id="breakevenCalcInline"></div>
-      </div>
+      </details>
 
-      <div class="panel panel-pad">
-        <div class="section-title">
+      <details class="panel panel-pad collapsible-panel">
+        <summary class="section-title">
           <h2>工资拆解</h2>
           <span>店长工资 + 普通员工工资 + 股东工资</span>
-        </div>
+        </summary>
         <div class="breakdown">
           <div class="row"><span>店长提成</span><strong id="managerCommissionOut">¥0</strong></div>
           <div class="row"><span>店长工资</span><strong id="managerPayOut">¥0</strong></div>
@@ -1287,13 +1501,13 @@
           <div class="row"><span>工资总成本</span><strong id="totalPayrollOut2">¥0</strong></div>
         </div>
         <div class="formula" id="payrollCalcInline"></div>
-      </div>
+      </details>
 
-      <div class="panel panel-pad">
-        <div class="section-title">
+      <details class="panel panel-pad collapsible-panel">
+        <summary class="section-title">
           <h2>合伙人获利</h2>
           <span>自动按当前经营结果拆解</span>
-        </div>
+        </summary>
         <div class="breakdown">
           <div class="row"><span>月折旧成本</span><strong id="partnerDepreciationOut">¥0</strong></div>
           <div class="row"><span>合伙人工资</span><strong id="partnerSalaryOut">¥0</strong></div>
@@ -1301,7 +1515,7 @@
           <div class="row"><span>合伙人收入合计</span><strong id="partnerProfitOut">¥0</strong></div>
         </div>
         <div class="formula" id="partnerProfitCalcInline"></div>
-      </div>
+      </details>
 
       <div class="panel panel-pad">
         <div class="section-title">
@@ -1373,12 +1587,12 @@
             <h3>保本营业额</h3>
             月营业额由滑块直接设定；每日桌数 = 月营业额 ÷ 30 ÷ 每桌消费（自动反推）<br>
             固定成本合计 = 房租 + 水电 + 物业 + 其他 + 燃料费 + 低值易耗<br>
-            营销费用合计 = 月营业额 × 3.7%<br>
+            营销费用合计 = 月营业额 × 营销费用率（网络推广 + 包装 + 美团管理，三项比例都可用滑块调整）<br>
             工资总成本 = 店长工资 + 普通员工工资 + 股东工资<br>
             成本合计 = 店长底薪 + 普通员工工资 + 股东工资 + 固定成本 + 月折旧成本<br>
-            基础保本营业额 = 成本合计 ÷ (毛利率 - 3.7%)<br>
+            基础保本营业额 = 成本合计 ÷ (毛利率 - 营销费用率)<br>
             第一档店长提成 = 基础保本营业额 × 3%<br>
-            月保本营业额 = (成本合计 + 第一档店长提成) ÷ (毛利率 - 3.7%)
+            月保本营业额 = (成本合计 + 第一档店长提成) ÷ (毛利率 - 营销费用率)
             <div class="formula-live" id="breakevenCalc"></div>
           </div>
           <div class="formula-block">
@@ -1431,12 +1645,12 @@
 
     const ids = [
       "investment", "depreciationYears", "monthlySales", "dailyTables", "tableSpend", "grossMargin",
+      "promotionRate", "packingRate", "meituanRate",
       "managerBase", "staffCount", "staffSalary", "rentCost", "utilityCost",
       "propertyCost", "otherCost", "fuelCost", "consumableCost", "partnerBaseSalary", "partnerCount"
     ];
     const storageKey = "restaurantRoiCalculatorTableValues";
     const scenariosKey = "restaurantRoiCalculatorTableScenarios";
-    const variableFeeRate = 0.037;
 
     const inputs = Object.fromEntries(ids.map((id) => [id, document.getElementById(id)]));
     const out = (id) => document.getElementById(id);
@@ -1459,13 +1673,21 @@
           }
         });
       } catch {
-        localStorage.removeItem(storageKey);
+        try {
+          localStorage.removeItem(storageKey);
+        } catch {
+          // 当前环境不允许使用 localStorage（比如受限的预览窗口），跳过保存的参数，不影响计算器正常显示
+        }
       }
     }
 
     function saveValues() {
-      const values = Object.fromEntries(ids.map((id) => [id, inputs[id].value]));
-      localStorage.setItem(storageKey, JSON.stringify(values));
+      try {
+        const values = Object.fromEntries(ids.map((id) => [id, inputs[id].value]));
+        localStorage.setItem(storageKey, JSON.stringify(values));
+      } catch {
+        // 当前环境不允许使用 localStorage，跳过保存，不影响计算器继续正常计算和显示
+      }
     }
 
     function currentValues() {
@@ -1476,13 +1698,21 @@
       try {
         return JSON.parse(localStorage.getItem(scenariosKey) || "{}");
       } catch {
-        localStorage.removeItem(scenariosKey);
+        try {
+          localStorage.removeItem(scenariosKey);
+        } catch {
+          // 当前环境不允许使用 localStorage，跳过
+        }
         return {};
       }
     }
 
     function writeScenarios(scenarios) {
-      localStorage.setItem(scenariosKey, JSON.stringify(scenarios));
+      try {
+        localStorage.setItem(scenariosKey, JSON.stringify(scenarios));
+      } catch {
+        // 当前环境不允许使用 localStorage，A/B/C 方案保存会静默失败，不影响计算器主功能
+      }
     }
 
     function renderScenarioSlots() {
@@ -1564,12 +1794,20 @@
       return num("monthlySales");
     }
 
+    function calcVariableFeeRate() {
+      return (num("promotionRate") + num("packingRate") + num("meituanRate")) / 100;
+    }
+
+    function fmtRate(value) {
+      return `${Number(value.toFixed(2))}%`;
+    }
+
     function calcVariableFees(sales) {
       return {
-        promotion: sales * 0.03,
-        packing: sales * 0.005,
-        meituan: sales * 0.002,
-        total: sales * variableFeeRate
+        promotion: sales * num("promotionRate") / 100,
+        packing: sales * num("packingRate") / 100,
+        meituan: sales * num("meituanRate") / 100,
+        total: sales * calcVariableFeeRate()
       };
     }
 
@@ -1599,7 +1837,7 @@
     }
 
     function calcBaseTarget() {
-      const contributionRate = num("grossMargin") / 100 - variableFeeRate;
+      const contributionRate = num("grossMargin") / 100 - calcVariableFeeRate();
       if (contributionRate <= 0) {
         return Infinity;
       }
@@ -1607,7 +1845,7 @@
     }
 
     function calcFinalBreakeven(baseTarget) {
-      const contributionRate = num("grossMargin") / 100 - variableFeeRate;
+      const contributionRate = num("grossMargin") / 100 - calcVariableFeeRate();
       if (contributionRate <= 0 || !Number.isFinite(baseTarget)) {
         return Infinity;
       }
@@ -1773,26 +2011,29 @@
       out("stickyMonthlyProfit").textContent = money(monthlyProfit);
       setTone(out("stickyMonthlyProfit"), monthlyProfit);
 
+      const cogs = sales - grossProfit;
       out("salesOut").textContent = money(sales);
-      out("variableFeeOut").textContent = money(variableFees.total);
+      out("cogsRateNote").textContent = `(${(100 - num("grossMargin")).toFixed(0)}%)`;
+      out("cogsOut").textContent = `-${money(cogs)}`;
       out("grossProfitOut").textContent = money(grossProfit);
-      out("totalPayrollOut").textContent = money(payroll);
-      out("fixedCostOut").textContent = money(fixedCost);
-      out("depreciationOut").textContent = money(depreciation);
-      out("resultCalcInline").innerHTML = `
-        月营业额 <b>${money(sales)}</b>（滑块直接设定，约合每日 ${Math.round(num("dailyTables"))}桌 × ${money(num("tableSpend"))}）<br>
-        月毛利 <b>${money(grossProfit)}</b> = 月营业额 ${money(sales)} × 毛利率 ${num("grossMargin")}%<br>
-        月净利润 <b>${money(monthlyProfit)}</b> = 月毛利 ${money(grossProfit)} - 营销费用 ${money(variableFees.total)} - 工资 ${money(payroll)} - 固定成本 ${money(fixedCost)} - 折旧 ${money(depreciation)}
-      `;
+      out("variableFeeOut").textContent = `-${money(variableFees.total)}`;
+      out("totalPayrollOut").textContent = `-${money(payroll)}`;
+      out("fixedCostOut").textContent = `-${money(fixedCost)}`;
+      out("depreciationOut").textContent = `-${money(depreciation)}`;
+      out("resultProfitOut").textContent = money(monthlyProfit);
+      setTone(out("resultProfitOut"), monthlyProfit);
+      out("promotionRateChip").textContent = fmtRate(num("promotionRate"));
+      out("packingRateChip").textContent = fmtRate(num("packingRate"));
+      out("meituanRateChip").textContent = fmtRate(num("meituanRate"));
       out("promotionFeeOut").textContent = money(variableFees.promotion);
       out("packingFeeOut").textContent = money(variableFees.packing);
       out("meituanFeeOut").textContent = money(variableFees.meituan);
       out("variableFeeTotalOut").textContent = money(variableFees.total);
       out("variableFeeCalcInline").innerHTML = `
-        网络推广费 <b>${money(variableFees.promotion)}</b> = 月营业额 ${money(sales)} × 3%<br>
-        包装费 <b>${money(variableFees.packing)}</b> = 月营业额 ${money(sales)} × 0.5%<br>
-        美团管理费 <b>${money(variableFees.meituan)}</b> = 月营业额 ${money(sales)} × 0.2%<br>
-        营销费用合计 <b>${money(variableFees.total)}</b> = 月营业额 ${money(sales)} × 3.7%
+        网络推广费 <b>${money(variableFees.promotion)}</b> = 月营业额 ${money(sales)} × ${fmtRate(num("promotionRate"))}<br>
+        包装费 <b>${money(variableFees.packing)}</b> = 月营业额 ${money(sales)} × ${fmtRate(num("packingRate"))}<br>
+        美团管理费 <b>${money(variableFees.meituan)}</b> = 月营业额 ${money(sales)} × ${fmtRate(num("meituanRate"))}<br>
+        营销费用合计 <b>${money(variableFees.total)}</b> = 月营业额 ${money(sales)} × ${fmtRate(calcVariableFeeRate() * 100)}
       `;
       out("investmentCalcInline").innerHTML = `
         月折旧成本 <b>${money(depreciation)}</b> = 总投资 ${money(investment)} ÷ ${num("depreciationYears")}年 ÷ 12个月
@@ -1823,8 +2064,8 @@
         股东工资 <b>${money(partnerSalary)}</b> = 股东底薪 ${money(num("partnerBaseSalary"))} × 股东人数 ${num("partnerCount")}人
       `;
       out("breakevenCalcInline").innerHTML = `
-        基础保本营业额 <b>${Number.isFinite(baseTarget) ? money(baseTarget) : "无法测算"}</b> = 基础成本 ${money(calcBaseCost())} ÷ (毛利率 ${num("grossMargin")}% - 营销费用率 3.7%)<br>
-        月保本营业额 <b>${Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法测算"}</b> = (基础成本 ${money(calcBaseCost())} + 第一档提成 ${Number.isFinite(baseTarget) ? money(baseTarget * 0.03) : "无法测算"}) ÷ (毛利率 ${num("grossMargin")}% - 3.7%)<br>
+        基础保本营业额 <b>${Number.isFinite(baseTarget) ? money(baseTarget) : "无法测算"}</b> = 基础成本 ${money(calcBaseCost())} ÷ (毛利率 ${num("grossMargin")}% - 营销费用率 ${fmtRate(calcVariableFeeRate() * 100)})<br>
+        月保本营业额 <b>${Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法测算"}</b> = (基础成本 ${money(calcBaseCost())} + 第一档提成 ${Number.isFinite(baseTarget) ? money(baseTarget * 0.03) : "无法测算"}) ÷ (毛利率 ${num("grossMargin")}% - ${fmtRate(calcVariableFeeRate() * 100)})<br>
         每日保本营业额 <b>${Number.isFinite(dailyBreakeven) ? money(dailyBreakeven) : "无法测算"}</b> = 月保本营业额 ÷ 30天<br>
         每日保本桌数 <b>${Number.isFinite(dailyOrders) ? `${Math.ceil(dailyOrders)}桌` : "无法测算"}</b> = 每日保本营业额 ÷ 每桌消费 ${money(num("tableSpend"))}
       `;
@@ -1855,10 +2096,10 @@
         当前计算：<br>
         月营业额 <b>${money(sales)}</b>（直接设定，对应每日桌数约${Math.round(num("dailyTables"))}桌）<br>
         固定成本 <b>${money(fixedCost)}</b> = 房租 ${money(num("rentCost"))} + 水电 ${money(num("utilityCost"))} + 物业 ${money(num("propertyCost"))} + 其他 ${money(num("otherCost"))} + 燃料费 ${money(num("fuelCost"))} + 低值易耗 ${money(num("consumableCost"))}<br>
-        营销费用率 <b>3.7%</b> = 网络推广 3% + 包装 0.5% + 美团管理 0.2%<br>
+        营销费用率 <b>${fmtRate(calcVariableFeeRate() * 100)}</b> = 网络推广 ${fmtRate(num("promotionRate"))} + 包装 ${fmtRate(num("packingRate"))} + 美团管理 ${fmtRate(num("meituanRate"))}<br>
         基础成本 <b>${money(calcBaseCost())}</b> = 店长底薪 ${money(num("managerBase"))} + 员工工资 ${money(staffPay)} + 股东工资 ${money(partnerSalary)} + 固定成本 ${money(fixedCost)} + 折旧 ${money(depreciation)}<br>
-        基础保本营业额 <b>${Number.isFinite(baseTarget) ? money(baseTarget) : "无法测算"}</b> = 基础成本 ÷ (${num("grossMargin")}% - 3.7%)<br>
-        月保本营业额 <b>${Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法测算"}</b> = (基础成本 + 第一档提成 ${Number.isFinite(baseTarget) ? money(baseTarget * 0.03) : "无法测算"}) ÷ (${num("grossMargin")}% - 3.7%)
+        基础保本营业额 <b>${Number.isFinite(baseTarget) ? money(baseTarget) : "无法测算"}</b> = 基础成本 ÷ (${num("grossMargin")}% - ${fmtRate(calcVariableFeeRate() * 100)})<br>
+        月保本营业额 <b>${Number.isFinite(monthlyBreakeven) ? money(monthlyBreakeven) : "无法测算"}</b> = (基础成本 + 第一档提成 ${Number.isFinite(baseTarget) ? money(baseTarget * 0.03) : "无法测算"}) ÷ (${num("grossMargin")}% - ${fmtRate(calcVariableFeeRate() * 100)})
       `;
       out("managerPayCalc").innerHTML = `
         当前计算：<br>
@@ -1938,6 +2179,69 @@
       inputs[id].addEventListener("input", () => {
         saveValues();
         render();
+      });
+    });
+
+    function startChipEdit(id) {
+      if (locked) return;
+      const chip = out(`${id}Chip`);
+      const rangeInput = inputs[id];
+      if (!chip || !rangeInput || chip.querySelector(".chip-edit-input")) return;
+      const currentValue = num(id);
+      const editInput = document.createElement("input");
+      editInput.type = "number";
+      editInput.className = "chip-edit-input";
+      editInput.value = currentValue;
+      editInput.step = rangeInput.step || 1;
+      editInput.min = rangeInput.min;
+      editInput.max = rangeInput.max;
+      let settled = false;
+      const commit = () => {
+        if (settled) return;
+        settled = true;
+        let v = Number(editInput.value);
+        if (Number.isNaN(v)) v = currentValue;
+        const min = Number(rangeInput.min);
+        const max = Number(rangeInput.max);
+        v = Math.min(max, Math.max(min, v));
+        rangeInput.value = v;
+        rangeInput.dispatchEvent(new Event("input", { bubbles: true }));
+      };
+      const cancel = () => {
+        if (settled) return;
+        settled = true;
+        render();
+      };
+      editInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          event.stopPropagation();
+          commit();
+        } else if (event.key === "Escape") {
+          event.preventDefault();
+          event.stopPropagation();
+          cancel();
+        }
+      });
+      editInput.addEventListener("blur", commit);
+      chip.textContent = "";
+      chip.appendChild(editInput);
+      editInput.focus();
+      editInput.select();
+    }
+
+    ids.forEach((id) => {
+      if (id === "dailyTables") return;
+      const chip = out(`${id}Chip`);
+      if (!chip) return;
+      chip.classList.add("value-chip-editable");
+      chip.tabIndex = 0;
+      chip.addEventListener("click", () => startChipEdit(id));
+      chip.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          startChipEdit(id);
+        }
       });
     });
 
